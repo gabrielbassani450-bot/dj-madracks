@@ -386,24 +386,25 @@
     }
 
     /* --- video background ---
-       blur(4px) = 4× cheaper than original blur(8px) (cost ∝ r²).
-       Enough to dissolve the video's own branding text without heavy CPU.
-       backdrop-filter over <video> freezes frames on iOS/Chrome — avoid. */
+       ZERO CSS filter on the video element — any filter() forces software
+       decode pipeline: no HW accel, black screen or freeze on iOS/Android.
+       Text from the source clip is fully buried by .hero-overlay opacity. */
     .hero-video {
       position: absolute; left: -3%; top: -15%;
       width: 106%; height: 130%;
       object-fit: cover;
       z-index: 0;
       will-change: transform;
-      filter: saturate(120%) contrast(106%) blur(4px);
     }
     /* legibility overlays — heavy enough to mute the video's own
        branding so our hero name stays the single focal point */
+    /* overlay darkened at 38% zone (weakest point) — buries video's own branding
+       text without needing any CSS filter on the video element itself */
     .hero-overlay {
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
       background:
-        linear-gradient(180deg, rgba(5,5,7,.74) 0%, rgba(5,5,7,.56) 38%, rgba(5,5,7,.86) 80%, var(--bg) 100%),
-        radial-gradient(ellipse 90% 70% at 50% 42%, rgba(5,5,7,.34) 0%, rgba(5,5,7,.74) 100%);
+        linear-gradient(180deg, rgba(5,5,7,.80) 0%, rgba(5,5,7,.70) 38%, rgba(5,5,7,.90) 80%, var(--bg) 100%),
+        radial-gradient(ellipse 90% 70% at 50% 42%, rgba(5,5,7,.50) 0%, rgba(5,5,7,.82) 100%);
     }
     /* cold blue tint */
     .hero-tint {
@@ -1160,8 +1161,7 @@
            autoplay muted loop playsinline preload="auto" fetchpriority="high"
            poster="assets/hero-poster.jpg"
            data-depth="4" data-scroll="0.12" aria-hidden="true">
-      <source src="assets/hero-bg.webm" type="video/webm" /><!-- lighter codec when available -->
-      <source src="assets/hero-bg.mp4"  type="video/mp4" />
+      <source src="assets/hero-bg.mp4" type="video/mp4" />
     </video>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-tint" aria-hidden="true"></div>
