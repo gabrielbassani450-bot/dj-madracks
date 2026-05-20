@@ -386,22 +386,16 @@
     }
 
     /* --- video background ---
-       NO CSS filter blur on the video — per-frame CPU blur destroys perf.
-       Instead: a backdrop-filter overlay (.hero-video-blur) blurs via GPU.
-       Video only carries cheap saturation/contrast (paint, not blur). */
+       blur(4px) = 4× cheaper than original blur(8px) (cost ∝ r²).
+       Enough to dissolve the video's own branding text without heavy CPU.
+       backdrop-filter over <video> freezes frames on iOS/Chrome — avoid. */
     .hero-video {
       position: absolute; left: -3%; top: -15%;
       width: 106%; height: 130%;
       object-fit: cover;
       z-index: 0;
       will-change: transform;
-      filter: saturate(120%) contrast(106%); /* blur removed → .hero-video-blur */
-    }
-    /* GPU backdrop-filter blur over the video — compositor thread, not per-frame CPU */
-    .hero-video-blur {
-      position: absolute; inset: 0; z-index: 1; pointer-events: none;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      filter: saturate(120%) contrast(106%) blur(4px);
     }
     /* legibility overlays — heavy enough to mute the video's own
        branding so our hero name stays the single focal point */
@@ -1110,7 +1104,6 @@
       :root { --blur: 12px; }
       .orb { filter: blur(70px); }
       .h-orb { filter: blur(54px); }
-      .hero-video-blur { backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
     }
 
     /* respect reduced-motion — kill particles / parallax / heavy loops */
@@ -1170,8 +1163,6 @@
       <source src="assets/hero-bg.webm" type="video/webm" /><!-- lighter codec when available -->
       <source src="assets/hero-bg.mp4"  type="video/mp4" />
     </video>
-    <!-- GPU backdrop-filter blur — hides video's own branding without per-frame CPU blur -->
-    <div class="hero-video-blur" aria-hidden="true"></div>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-tint" aria-hidden="true"></div>
 
@@ -1502,10 +1493,9 @@
     const reduced     = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const finePointer = window.matchMedia('(pointer: fine)').matches;
     const isSmall     = window.matchMedia('(max-width: 720px)').matches;
-    const saveData    = !!(navigator.connection && (
-      navigator.connection.saveData ||
-      ['slow-2g','2g','3g'].includes(navigator.connection.effectiveType)
-    ));
+    /* saveData: only respect explicit Data Saver toggle — effectiveType is unreliable
+       (browsers often report '3g' on good WiFi, would pause video unnecessarily) */
+    const saveData = !!(navigator.connection && navigator.connection.saveData);
 
     /* ─── utilities ─────────────────────────────────────────────── */
     const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
