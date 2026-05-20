@@ -412,13 +412,13 @@
     /* --- radial blue glow behind the figure --- */
     .hero-glow {
       position: absolute; z-index: 2; pointer-events: none;
-      right: 2%; bottom: -10%;
-      width: min(640px, 80vw); height: min(640px, 80vw);
+      right: -5%; bottom: -15%;
+      width: min(780px, 95vw); height: min(780px, 95vw);
       background: radial-gradient(circle,
-        rgba(111,168,255,.52) 0%, rgba(111,168,255,.17) 42%, transparent 70%);
-      filter: blur(20px);
+        rgba(111,168,255,.40) 0%, rgba(111,168,255,.10) 50%, transparent 100%);
+      filter: blur(40px); /* larger blur = softer, no hard edge */
       animation: glowPulse2 6.5s ease-in-out infinite;
-      will-change: transform, opacity;
+      /* no will-change — avoids compositing layer edge artifact */
     }
     @keyframes glowPulse2 {
       0%,100% { opacity: .62; }
@@ -466,8 +466,8 @@
       /* dissolve the figure's bottom edge into the hero — clean grounding */
       -webkit-mask-image: linear-gradient(to bottom, #000 87%, transparent 100%);
               mask-image: linear-gradient(to bottom, #000 87%, transparent 100%);
-      filter: drop-shadow(0 30px 44px rgba(0,0,0,.7))
-              drop-shadow(0 0 60px rgba(111,168,255,.22));
+      /* only dark shadow — blue glow via .hero-glow (avoids bounding-box artifact) */
+      filter: drop-shadow(0 30px 44px rgba(0,0,0,.7));
       animation: floatFig 7s ease-in-out infinite;
     }
     @keyframes floatFig {
