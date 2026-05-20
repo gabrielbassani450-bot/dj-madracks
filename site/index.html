@@ -386,15 +386,14 @@
     }
 
     /* --- video background ---
-       ZERO CSS filter on the video element — any filter() forces software
-       decode pipeline: no HW accel, black screen or freeze on iOS/Android.
-       Text from the source clip is fully buried by .hero-overlay opacity. */
+       NO will-change, NO filter, NO JS transform (data-depth removed).
+       Any of these three prevents hardware video decode on iOS/Android.
+       Video lives in its own fixed layer — browser handles it natively. */
     .hero-video {
       position: absolute; left: -3%; top: -15%;
       width: 106%; height: 130%;
       object-fit: cover;
       z-index: 0;
-      will-change: transform;
     }
     /* legibility overlays — heavy enough to mute the video's own
        branding so our hero name stays the single focal point */
@@ -1158,9 +1157,9 @@
 
     <!-- video background (autoplay muted loop, poster fallback) -->
     <video class="hero-video" id="heroVideo"
-           autoplay muted loop playsinline preload="auto" fetchpriority="high"
+           autoplay muted loop playsinline
            poster="assets/hero-poster.jpg"
-           data-depth="4" data-scroll="0.12" aria-hidden="true">
+           aria-hidden="true">
       <source src="assets/hero-bg.mp4" type="video/mp4" />
     </video>
     <div class="hero-overlay" aria-hidden="true"></div>
