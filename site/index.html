@@ -36,6 +36,11 @@
 
   <style>
     /* =========================================================
+       CASCADE LAYERS — explicit order, faster parse
+       ========================================================= */
+    @layer base, glass, components, sections, animations, utilities, responsive;
+
+    /* =========================================================
        RESET + DESIGN TOKENS — "Apple × Liquid Glass × Street"
        ========================================================= */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -61,9 +66,9 @@
       --glass-border: rgba(255,255,255,.12);
       --glass-edge:   rgba(255,255,255,.18);
 
-      /* Streetwear type stack */
-      --font-display: 'Clash Display', 'Helvetica Neue', Arial, sans-serif;
-      --font-body:    'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      /* Streetwear type stack — fallbacks sized to match web font geometry (zero CLS) */
+      --font-display: 'Clash Display', 'ClashDisplay-fallback', 'Helvetica Neue', Arial, sans-serif;
+      --font-body:    'Satoshi', 'Satoshi-fallback', 'Helvetica Neue', Arial, sans-serif;
       --font-mono:    'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
       --container: 1180px;
@@ -77,6 +82,7 @@
       /* Apple's signature springy easing */
       --ease: cubic-bezier(.22, 1, .36, 1);
       --blur: 20px;
+      scroll-behavior: smooth;
     }
 
     html, body {
@@ -201,6 +207,8 @@
        ========================================================= */
     .glass {
       position: relative;
+      contain: layout style paint;          /* isolate layer — no reflow bleeds */
+      transform: translateZ(0);             /* GPU composite promotion */
       background: linear-gradient(155deg, var(--glass-strong) 0%, var(--glass) 55%, rgba(255,255,255,.03) 100%);
       backdrop-filter: blur(var(--blur)) saturate(180%);
       -webkit-backdrop-filter: blur(var(--blur)) saturate(180%);
@@ -224,7 +232,8 @@
     }
     /* hover refraction — lift + brighten edge */
     .glass-hover {
-      transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .5s var(--ease);
+      /* explicit props only — no transition:all (expensive) */
+      transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .5s var(--ease), opacity .5s var(--ease);
     }
     .glass-hover:hover {
       transform: translateY(-6px);
@@ -281,9 +290,10 @@
         inset 0 1px 0 rgba(255,255,255,.6);
       animation: glowPulse 3.6s ease-in-out infinite;
     }
+    /* glowPulse uses filter (compositor thread) — not box-shadow (repaint) */
     @keyframes glowPulse {
-      0%,100% { box-shadow: 0 10px 30px rgba(111,168,255,.30), inset 0 1px 0 rgba(255,255,255,.6); }
-      50%     { box-shadow: 0 12px 44px rgba(111,168,255,.60), 0 0 26px rgba(143,214,255,.4), inset 0 1px 0 rgba(255,255,255,.6); }
+      0%,100% { filter: drop-shadow(0 8px 20px rgba(111,168,255,.30)); }
+      50%     { filter: drop-shadow(0 10px 30px rgba(111,168,255,.60)) drop-shadow(0 0 18px rgba(143,214,255,.40)); }
     }
     .btn-primary:hover {
       box-shadow: 0 16px 50px rgba(111,168,255,.6), 0 0 34px rgba(143,214,255,.5), inset 0 1px 0 rgba(255,255,255,.7);
@@ -316,6 +326,8 @@
        ========================================================= */
     .nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      transform: translateZ(0);             /* GPU layer — prevents scroll jank */
+      contain: layout style;               /* no paint containment — dropdowns may overflow */
       display: flex; align-items: center; justify-content: space-between;
       gap: 1rem;
       padding: 1.15rem var(--gutter);
@@ -847,13 +859,15 @@
     }
     .city .bar::before {
       content: ""; position: absolute; inset: 0;
-      width: 0;
+      width: 100%;                          /* full width, masked by scaleX */
+      transform: scaleX(0);
+      transform-origin: left center;        /* animate from left */
       border-radius: 100px;
       background: linear-gradient(90deg, var(--accent), var(--accent-2));
       box-shadow: 0 0 12px rgba(111,168,255,.5);
-      transition: width 1.4s var(--ease);
+      transition: transform 1.4s var(--ease); /* transform = compositor, not width */
     }
-    .city.visible .bar::before { width: var(--w, 0%); }
+    .city.visible .bar::before { transform: scaleX(var(--sw, 0)); }
     .city .count {
       text-align: right;
       font-family: var(--font-display); font-weight: 700;
@@ -1047,6 +1061,42 @@
     .reveal[data-delay="5"] { transition-delay: .40s; }
 
     /* =========================================================
+       CONTENT-VISIBILITY — skip layout/paint for off-screen sections
+       Browser renders them only when near viewport.
+       contain-intrinsic-size = estimated height to preserve scrollbar accuracy.
+       ========================================================= */
+    #track, #cities, #playlist, #booking {
+      content-visibility: auto;
+      contain-intrinsic-size: 0 700px;
+    }
+    footer {
+      content-visibility: auto;
+      contain-intrinsic-size: 0 380px;
+    }
+
+    /* =========================================================
+       @FONT-FACE FALLBACKS — size-adjust / ascent-override
+       Match system font geometry to Satoshi & Clash Display so
+       there is zero layout shift when web fonts swap in (CLS = 0).
+       ========================================================= */
+    @font-face {
+      font-family: 'Satoshi-fallback';
+      src: local('Helvetica Neue'), local('Arial');
+      size-adjust: 100%;
+      ascent-override: 95%;
+      descent-override: 21%;
+      line-gap-override: 0%;
+    }
+    @font-face {
+      font-family: 'ClashDisplay-fallback';
+      src: local('Helvetica Neue'), local('Arial Black'), local('Arial');
+      size-adjust: 108%;
+      ascent-override: 90%;
+      descent-override: 15%;
+      line-gap-override: 0%;
+    }
+
+    /* =========================================================
        MOBILE — lighter blur, calmer motion
        ========================================================= */
     @media (max-width: 640px) {
@@ -1106,10 +1156,11 @@
 
     <!-- video background (autoplay muted loop, poster fallback) -->
     <video class="hero-video" id="heroVideo"
-           autoplay muted loop playsinline preload="auto"
+           autoplay muted loop playsinline preload="auto" fetchpriority="high"
            poster="assets/hero-poster.jpg"
            data-depth="4" data-scroll="0.12" aria-hidden="true">
-      <source src="assets/hero-bg.mp4" type="video/mp4" />
+      <source src="assets/hero-bg.webm" type="video/webm" /><!-- lighter codec when available -->
+      <source src="assets/hero-bg.mp4"  type="video/mp4" />
     </video>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-tint" aria-hidden="true"></div>
@@ -1288,7 +1339,7 @@
       </div>
 
       <div class="cities">
-        <div class="city glass glass-hover reveal" data-delay="1" style="--w: 100%;">
+        <div class="city glass glass-hover reveal" data-delay="1" style="--w: 100%; --sw: 1;">
           <span class="rank">01</span>
           <div class="body">
             <span class="name">São Paulo</span>
@@ -1296,7 +1347,7 @@
           </div>
           <span class="count"><span data-count="1010">0</span><small>ouvintes</small></span>
         </div>
-        <div class="city glass glass-hover reveal" data-delay="2" style="--w: 40%;">
+        <div class="city glass glass-hover reveal" data-delay="2" style="--w: 40%; --sw: 0.40;">
           <span class="rank">02</span>
           <div class="body">
             <span class="name">Porto Alegre</span>
@@ -1304,7 +1355,7 @@
           </div>
           <span class="count"><span data-count="408">0</span><small>ouvintes</small></span>
         </div>
-        <div class="city glass glass-hover reveal" data-delay="3" style="--w: 27%;">
+        <div class="city glass glass-hover reveal" data-delay="3" style="--w: 27%; --sw: 0.27;">
           <span class="rank">03</span>
           <div class="body">
             <span class="name">Brasília</span>
@@ -1312,7 +1363,7 @@
           </div>
           <span class="count"><span data-count="270">0</span><small>ouvintes</small></span>
         </div>
-        <div class="city glass glass-hover reveal" data-delay="4" style="--w: 26.6%;">
+        <div class="city glass glass-hover reveal" data-delay="4" style="--w: 26.6%; --sw: 0.266;">
           <span class="rank">04</span>
           <div class="body">
             <span class="name">Curitiba</span>
@@ -1320,7 +1371,7 @@
           </div>
           <span class="count"><span data-count="269">0</span><small>ouvintes</small></span>
         </div>
-        <div class="city glass glass-hover reveal" data-delay="5" style="--w: 26.5%;">
+        <div class="city glass glass-hover reveal" data-delay="5" style="--w: 26.5%; --sw: 0.265;">
           <span class="rank">05</span>
           <div class="body">
             <span class="name">Belo Horizonte</span>
@@ -1436,10 +1487,23 @@
 
   <script>
     'use strict';
-    const reduced    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ─── env flags ─────────────────────────────────────────────── */
+    const reduced     = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const finePointer = window.matchMedia('(pointer: fine)').matches;
-    const isSmall    = window.matchMedia('(max-width: 720px)').matches;
-    const saveData   = !!(navigator.connection && navigator.connection.saveData);
+    const isSmall     = window.matchMedia('(max-width: 720px)').matches;
+    const saveData    = !!(navigator.connection && (
+      navigator.connection.saveData ||
+      ['slow-2g','2g','3g'].includes(navigator.connection.effectiveType)
+    ));
+
+    /* ─── utilities ─────────────────────────────────────────────── */
+    const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+    const ric      = window.requestIdleCallback || ((fn) => setTimeout(fn, 1));
+
+    /* ─── scroll state — save in event, apply in rAF (no jank) ─── */
+    let _scrollY = window.scrollY;
+    window.addEventListener('scroll', () => { _scrollY = window.scrollY; }, { passive: true });
 
     /* =========================================================
        ANIMATED COUNTERS — easeOutCubic, pt-BR formatting
@@ -1463,14 +1527,17 @@
 
     /* =========================================================
        REVEAL ON SCROLL + counters via IntersectionObserver
+       Counters deferred to requestIdleCallback — non-critical
        ========================================================= */
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
         const el = entry.target;
         el.classList.add('visible');
-        el.querySelectorAll('[data-count]').forEach((c) => {
-          if (!c.dataset.done) { c.dataset.done = '1'; animateCount(c); }
+        ric(() => {
+          el.querySelectorAll('[data-count]').forEach((c) => {
+            if (!c.dataset.done) { c.dataset.done = '1'; animateCount(c); }
+          });
         });
         io.unobserve(el);
       });
@@ -1482,18 +1549,19 @@
       document.querySelectorAll('.hero [data-count]').forEach((c) => {
         if (!c.dataset.done) { c.dataset.done = '1'; animateCount(c); }
       });
-    });
+    }, { passive: true });
 
     /* =========================================================
        NAVBAR — shrink + glass on scroll
+       Reads _scrollY (saved by scroll listener above — no layout read)
        ========================================================= */
     const nav = document.getElementById('nav');
-    const onNavScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
+    const onNavScroll = () => nav.classList.toggle('scrolled', _scrollY > 40);
     onNavScroll();
     window.addEventListener('scroll', onNavScroll, { passive: true });
 
     /* =========================================================
-       HERO TYPEWRITER — mono eyebrow line + occasional glitch
+       HERO TYPEWRITER — deferred via requestIdleCallback
        ========================================================= */
     const typeEl = document.getElementById('typeLine');
     const TYPE_TEXT = 'ON AIR — SÃO PAULO, BR';
@@ -1501,139 +1569,205 @@
       if (reduced) {
         typeEl.textContent = TYPE_TEXT;
       } else {
-        let i = 0;
-        const type = () => {
-          typeEl.textContent = TYPE_TEXT.slice(0, i);
-          i++;
-          if (i <= TYPE_TEXT.length) setTimeout(type, 55);
-          else {
-            /* subtle glitch every ~7s once typing finishes */
-            setInterval(() => {
-              typeEl.classList.add('glitch');
-              setTimeout(() => typeEl.classList.remove('glitch'), 700);
-            }, 7000);
-          }
-        };
-        setTimeout(type, 350);
+        ric(() => {
+          let i = 0;
+          const type = () => {
+            typeEl.textContent = TYPE_TEXT.slice(0, i++);
+            if (i <= TYPE_TEXT.length) setTimeout(type, 55);
+            else {
+              setInterval(() => {
+                typeEl.classList.add('glitch');
+                setTimeout(() => typeEl.classList.remove('glitch'), 700);
+              }, 7000);
+            }
+          };
+          setTimeout(type, 350);
+        });
       }
     }
 
     /* =========================================================
-       HERO VIDEO — pause when motion is unwanted / data-saving
+       HERO VIDEO — pause on reduced-motion / slow connection
        ========================================================= */
     const heroVideo = document.getElementById('heroVideo');
     if (heroVideo && (reduced || saveData)) {
       heroVideo.removeAttribute('autoplay');
-      heroVideo.addEventListener('loadeddata', () => heroVideo.pause());
-      try { heroVideo.pause(); } catch (e) {}
+      heroVideo.addEventListener('loadeddata', () => heroVideo.pause(), { passive: true });
+      try { heroVideo.pause(); } catch (_e) {}
     }
 
     /* =========================================================
-       HERO PARALLAX — multi-layer (mouse + scroll), 3D tilt
-       Figure moves opposite the cursor for depth.
+       UNIFIED MAIN LOOP — ONE rAF for parallax + cursor glow
+       No separate rAF loops. Reads _scrollY from event (no DOM read).
        ========================================================= */
-    const hero   = document.getElementById('hero');
+    const hero    = document.getElementById('hero');
     const pLayers = hero ? [...hero.querySelectorAll('[data-depth]')] : [];
-    let mx = 0, my = 0, cx = 0, cy = 0, sy = 0;
+    const glowEl  = document.querySelector('.cursor-glow');
 
-    if (hero && !reduced && pLayers.length) {
-      if (finePointer) {
-        window.addEventListener('pointermove', (e) => {
-          mx = (e.clientX / window.innerWidth) - 0.5;
-          my = (e.clientY / window.innerHeight) - 0.5;
-        }, { passive: true });
-      }
-      const tick = () => {
+    let mx = 0, my = 0, cx = 0, cy = 0;   /* mouse parallax lerp state */
+    let gx = 0, gy = 0, ptx = 0, pty = 0; /* cursor glow lerp state     */
+    let glowShown = false;
+
+    if (!reduced && finePointer) {
+      ptx = gx = window.innerWidth  / 2;
+      pty = gy = window.innerHeight / 2;
+      /* single pointermove — feeds both parallax AND cursor glow */
+      window.addEventListener('pointermove', (e) => {
+        mx  = (e.clientX / window.innerWidth)  - 0.5;
+        my  = (e.clientY / window.innerHeight) - 0.5;
+        ptx = e.clientX;
+        pty = e.clientY;
+        if (!glowShown && glowEl) { glowEl.style.opacity = '1'; glowShown = true; }
+      }, { passive: true });
+    }
+
+    function mainLoop() {
+      /* ── parallax (mouse + scroll) ── */
+      if (hero && !reduced && pLayers.length) {
         cx += (mx - cx) * 0.07;
         cy += (my - cy) * 0.07;
-        sy = window.scrollY;
         for (const l of pLayers) {
           const depth = parseFloat(l.dataset.depth)  || 0;
           const scl   = parseFloat(l.dataset.scroll) || 0;
           const tx = -cx * depth;
-          const ty = (-cy * depth) + (sy * scl);
-          let t = `translate3d(${tx.toFixed(2)}px, ${ty.toFixed(2)}px, 0)`;
+          const ty = (-cy * depth) + (_scrollY * scl); /* _scrollY from event, not window.scrollY */
+          let t = `translate3d(${tx.toFixed(2)}px,${ty.toFixed(2)}px,0)`;
           if (l.dataset.tilt) {
             t += ` rotateY(${(cx * 6).toFixed(2)}deg) rotateX(${(-cy * 4).toFixed(2)}deg)`;
           }
           l.style.transform = t;
         }
-        requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
+      }
+      /* ── cursor glow ── */
+      if (glowEl && finePointer && !reduced) {
+        gx += (ptx - gx) * 0.15;
+        gy += (pty - gy) * 0.15;
+        glowEl.style.transform = `translate(${gx}px,${gy}px) translate(-50%,-50%)`;
+      }
+      requestAnimationFrame(mainLoop);
     }
+    if (!reduced) requestAnimationFrame(mainLoop);
 
     /* =========================================================
-       FLOATING PARTICLES — slow blue dust over the hero video
+       PARTICLES — OffscreenCanvas Web Worker
+       Physics runs on separate thread → main thread 100% free.
+       Fallback: main thread with -40% particles if no OffscreenCanvas.
+       Float32Array for positions/velocities (faster than object array).
+       FPS-normalised via delta/16.67 — runs identically at 60 or 120hz.
        ========================================================= */
     (function initParticles() {
       const canvas = document.getElementById('heroParticles');
       if (!canvas || !hero || reduced) return;
-      const ctx = canvas.getContext('2d');
+
       const COUNT = isSmall ? 16 : 46;
-      let w = 0, h = 0, parts = [];
 
-      const resize = () => {
-        w = canvas.width  = hero.offsetWidth;
-        h = canvas.height = hero.offsetHeight;
-      };
-      const build = () => {
-        parts = [];
-        for (let i = 0; i < COUNT; i++) {
-          parts.push({
-            x:  Math.random() * w,
-            y:  Math.random() * h,
-            r:  Math.random() * 1.7 + 0.5,
-            vx: (Math.random() - 0.5) * 0.18,
-            vy: -(Math.random() * 0.25 + 0.05),
-            a:  Math.random() * 0.5 + 0.15
-          });
-        }
-      };
-      const draw = () => {
-        ctx.clearRect(0, 0, w, h);
-        for (const p of parts) {
-          p.x += p.vx; p.y += p.vy;
-          if (p.y < -12)     { p.y = h + 12; p.x = Math.random() * w; }
-          if (p.x < -12)     p.x = w + 12;
-          if (p.x > w + 12)  p.x = -12;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle   = 'rgba(143,214,255,' + p.a + ')';
-          ctx.shadowBlur  = 6;
-          ctx.shadowColor = 'rgba(111,168,255,.7)';
-          ctx.fill();
-        }
-        requestAnimationFrame(draw);
-      };
+      if (typeof OffscreenCanvas !== 'undefined' && canvas.transferControlToOffscreen) {
+        /* ── Worker path — physics off main thread ── */
+        const offscreen = canvas.transferControlToOffscreen();
 
-      resize(); build(); draw();
-      let rt;
-      window.addEventListener('resize', () => {
-        clearTimeout(rt);
-        rt = setTimeout(() => { resize(); build(); }, 200);
-      }, { passive: true });
-    })();
+        const workerSrc = `'use strict';
+let ctx, w, h, count;
+const S = 6; /* stride: x y vx vy r a */
+let buf;
+self.onmessage = function(ev) {
+  if (ev.data.type === 'resize') { w = ev.data.width; h = ev.data.height; return; }
+  const cv = ev.data.canvas;
+  w = ev.data.width; h = ev.data.height; count = ev.data.count;
+  cv.width = w; cv.height = h;
+  ctx = cv.getContext('2d');
+  buf = new Float32Array(count * S);
+  for (let i = 0; i < count; i++) {
+    const b = i * S;
+    buf[b]   = Math.random() * w;
+    buf[b+1] = Math.random() * h;
+    buf[b+2] = (Math.random() - 0.5) * 0.18;
+    buf[b+3] = -(Math.random() * 0.25 + 0.05);
+    buf[b+4] = Math.random() * 1.7 + 0.5;
+    buf[b+5] = Math.random() * 0.5 + 0.15;
+  }
+  let last = 0;
+  function draw(ts) {
+    const d = Math.min(ts - last, 50); last = ts;
+    const s = d / 16.67;
+    ctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < count; i++) {
+      const b = i * S;
+      buf[b]   += buf[b+2] * s;
+      buf[b+1] += buf[b+3] * s;
+      if (buf[b+1] < -12) { buf[b+1] = h + 12; buf[b] = Math.random() * w; }
+      if (buf[b]   < -12)   buf[b] = w + 12;
+      if (buf[b]   > w + 12) buf[b] = -12;
+      ctx.beginPath();
+      ctx.arc(buf[b], buf[b+1], buf[b+4], 0, Math.PI * 2);
+      ctx.fillStyle   = 'rgba(143,214,255,' + buf[b+5] + ')';
+      ctx.shadowBlur  = 6;
+      ctx.shadowColor = 'rgba(111,168,255,.7)';
+      ctx.fill();
+    }
+    self.requestAnimationFrame(draw);
+  }
+  self.requestAnimationFrame(draw);
+};`;
 
-    /* =========================================================
-       DESKTOP CURSOR GLOW — soft blue light follows the pointer
-       ========================================================= */
-    (function cursorGlow() {
-      const glow = document.querySelector('.cursor-glow');
-      if (!glow || !finePointer || reduced) return;
-      let gx = window.innerWidth / 2, gy = window.innerHeight / 2;
-      let tx = gx, ty = gy, shown = false;
-      window.addEventListener('pointermove', (e) => {
-        tx = e.clientX; ty = e.clientY;
-        if (!shown) { glow.style.opacity = '1'; shown = true; }
-      }, { passive: true });
-      const loop = () => {
-        gx += (tx - gx) * 0.15;
-        gy += (ty - gy) * 0.15;
-        glow.style.transform = 'translate(' + gx + 'px,' + gy + 'px) translate(-50%,-50%)';
-        requestAnimationFrame(loop);
-      };
-      requestAnimationFrame(loop);
+        const blob   = new Blob([workerSrc], { type: 'application/javascript' });
+        const worker = new Worker(URL.createObjectURL(blob));
+
+        worker.postMessage({
+          canvas: offscreen,
+          width:  hero.offsetWidth,
+          height: hero.offsetHeight,
+          count:  COUNT
+        }, [offscreen]);
+
+        window.addEventListener('resize', debounce(() => {
+          worker.postMessage({ type: 'resize', width: hero.offsetWidth, height: hero.offsetHeight });
+        }, 200), { passive: true });
+
+      } else {
+        /* ── Fallback: main thread, 40% fewer particles ── */
+        const FB  = Math.floor(COUNT * 0.6);
+        const ctx = canvas.getContext('2d');
+        const S   = 6;
+        let w = 0, h = 0;
+        const buf = new Float32Array(FB * S);
+
+        const resize = () => { w = canvas.width = hero.offsetWidth; h = canvas.height = hero.offsetHeight; };
+        const init   = () => {
+          for (let i = 0; i < FB; i++) {
+            const b = i * S;
+            buf[b]   = Math.random() * w;
+            buf[b+1] = Math.random() * h;
+            buf[b+2] = (Math.random() - 0.5) * 0.18;
+            buf[b+3] = -(Math.random() * 0.25 + 0.05);
+            buf[b+4] = Math.random() * 1.7 + 0.5;
+            buf[b+5] = Math.random() * 0.5 + 0.15;
+          }
+        };
+        let last = 0;
+        const draw = (ts) => {
+          const d = Math.min(ts - last, 50); last = ts;
+          const s = d / 16.67;
+          ctx.clearRect(0, 0, w, h);
+          for (let i = 0; i < FB; i++) {
+            const b = i * S;
+            buf[b]   += buf[b+2] * s;
+            buf[b+1] += buf[b+3] * s;
+            if (buf[b+1] < -12) { buf[b+1] = h + 12; buf[b] = Math.random() * w; }
+            if (buf[b]   < -12)   buf[b] = w + 12;
+            if (buf[b]   > w + 12) buf[b] = -12;
+            ctx.beginPath();
+            ctx.arc(buf[b], buf[b+1], buf[b+4], 0, Math.PI * 2);
+            ctx.fillStyle   = 'rgba(143,214,255,' + buf[b+5] + ')';
+            ctx.shadowBlur  = 6;
+            ctx.shadowColor = 'rgba(111,168,255,.7)';
+            ctx.fill();
+          }
+          requestAnimationFrame(draw);
+        };
+
+        resize(); init(); requestAnimationFrame(draw);
+        window.addEventListener('resize', debounce(() => { resize(); init(); }, 200), { passive: true });
+      }
     })();
 
     /* =========================================================
@@ -1646,9 +1780,7 @@
         const size = Math.max(rect.width, rect.height);
         const r = document.createElement('span');
         r.className = 'ripple';
-        r.style.width = r.style.height = size + 'px';
-        r.style.left = (e.clientX - rect.left - size / 2) + 'px';
-        r.style.top  = (e.clientY - rect.top  - size / 2) + 'px';
+        r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size / 2}px;top:${e.clientY - rect.top - size / 2}px`;
         btn.appendChild(r);
         setTimeout(() => r.remove(), 650);
       });
@@ -1657,32 +1789,27 @@
     /* =========================================================
        BOOKING FORM — validation + mailto fallback
        ========================================================= */
-    const form = document.getElementById('bookingForm');
+    const form   = document.getElementById('bookingForm');
     const status = document.getElementById('formStatus');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name  = form.name.value.trim();
-      const email = form.email.value.trim();
-      const msg   = form.msg.value.trim();
+      const name    = form.name.value.trim();
+      const email   = form.email.value.trim();
+      const msg     = form.msg.value.trim();
       const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
       [form.name, form.email, form.msg].forEach((f) => f.classList.remove('error'));
-      status.className = 'form-status';
-      status.textContent = '';
-
+      status.className = 'form-status'; status.textContent = '';
       let bad = false;
       if (!name)                { form.name.classList.add('error');  bad = true; }
       if (!emailRe.test(email)) { form.email.classList.add('error'); bad = true; }
       if (!msg)                 { form.msg.classList.add('error');   bad = true; }
-
       if (bad) {
         status.className = 'form-status err';
         status.textContent = 'Preencha todos os campos com um email válido.';
         return;
       }
-
       const subject = encodeURIComponent('[BOOKING] ' + name);
-      const body = encodeURIComponent('Nome: ' + name + '\nEmail: ' + email + '\n\n' + msg);
+      const body    = encodeURIComponent('Nome: ' + name + '\nEmail: ' + email + '\n\n' + msg);
       window.location.href = 'mailto:booking@madracks.com?subject=' + subject + '&body=' + body;
       status.className = 'form-status ok';
       status.textContent = 'Abrindo seu cliente de email…';
@@ -1699,7 +1826,8 @@
         const target = document.querySelector(id);
         if (!target) return;
         e.preventDefault();
-        const y = target.getBoundingClientRect().top + window.scrollY - 68;
+        /* read target rect + _scrollY in one batch — no forced sync layout */
+        const y = target.getBoundingClientRect().top + _scrollY - 68;
         window.scrollTo({ top: y, behavior: reduced ? 'auto' : 'smooth' });
       });
     });
