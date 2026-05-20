@@ -385,26 +385,6 @@
       overflow: hidden;
     }
 
-    /* --- video background ---
-       NO will-change, NO filter, NO JS transform (data-depth removed).
-       Any of these three prevents hardware video decode on iOS/Android.
-       Video lives in its own fixed layer — browser handles it natively. */
-    .hero-video {
-      position: absolute; left: -3%; top: -15%;
-      width: 106%; height: 130%;
-      object-fit: cover;
-      z-index: 0;
-    }
-    /* legibility overlays — heavy enough to mute the video's own
-       branding so our hero name stays the single focal point */
-    /* overlay darkened at 38% zone (weakest point) — buries video's own branding
-       text without needing any CSS filter on the video element itself */
-    .hero-overlay {
-      position: absolute; inset: 0; z-index: 1; pointer-events: none;
-      background:
-        linear-gradient(180deg, rgba(5,5,7,.80) 0%, rgba(5,5,7,.70) 38%, rgba(5,5,7,.90) 80%, var(--bg) 100%),
-        radial-gradient(ellipse 90% 70% at 50% 42%, rgba(5,5,7,.50) 0%, rgba(5,5,7,.82) 100%);
-    }
     /* cold blue tint */
     .hero-tint {
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
@@ -1155,14 +1135,6 @@
   <!-- HERO -->
   <header class="hero" id="hero">
 
-    <!-- video background (autoplay muted loop, poster fallback) -->
-    <video class="hero-video" id="heroVideo"
-           autoplay muted loop playsinline
-           poster="assets/hero-poster.jpg"
-           aria-hidden="true">
-      <source src="assets/hero-bg.mp4" type="video/mp4" />
-    </video>
-    <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-tint" aria-hidden="true"></div>
 
     <!-- moving blurred orbs -->
@@ -1583,16 +1555,6 @@
           setTimeout(type, 350);
         });
       }
-    }
-
-    /* =========================================================
-       HERO VIDEO — pause on reduced-motion / slow connection
-       ========================================================= */
-    const heroVideo = document.getElementById('heroVideo');
-    if (heroVideo && (reduced || saveData)) {
-      heroVideo.removeAttribute('autoplay');
-      heroVideo.addEventListener('loadeddata', () => heroVideo.pause(), { passive: true });
-      try { heroVideo.pause(); } catch (_e) {}
     }
 
     /* =========================================================
