@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050507" />
+  <meta name="description" content="DJ MADRACKS ORIGINAL — DJ & Music Producer de São Paulo. Trap, hip-hop e cultura underground brasileira. Ouça no Spotify." />
+  <meta name="keywords" content="DJ Madracks, DJ Madracks Original, Leandro Delazeri, trap brasileiro, hip-hop, São Paulo, produtor musical, underground, Tropa Dos 244, Frequência Oculta" />
+  <meta name="author" content="DJ MADRACKS ORIGINAL" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="music.musician" />
+  <meta property="og:title" content="DJ MADRACKS ORIGINAL — DJ & Music Producer · São Paulo" />
+  <meta property="og:description" content="🎧 DJ & Music Producer · Underground · Trap · Hip-Hop. Ouça no Spotify." />
+  <meta property="og:image" content="assets/logo.png" />
+  <meta property="og:url" content="https://open.spotify.com/artist/24geOPfWtbI9dqjUJf7q7n" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="DJ MADRACKS ORIGINAL" />
+  <meta name="twitter:description" content="DJ & Music Producer · São Paulo, BR" />
+
+  <title>DJ MADRACKS ORIGINAL · DJ & Music Producer · São Paulo</title>
+
+  <!-- =========================================================
+       FONTS — streetwear / "drop exclusivo" stack
+       Display  : Clash Display  (heavy, wide, album-cover)  · Fontshare
+       Body     : Satoshi        (clean grotesk)             · Fontshare
+       Mono     : Space Mono     (technical labels/accents)  · Google
+       ========================================================= -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       RESET + DESIGN TOKENS — "Apple × Liquid Glass × Street"
+       ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    img, video { display: block; max-width: 100%; height: auto; }
+    button, input, textarea { font: inherit; color: inherit; background: none; border: none; outline: none; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    canvas { display: block; }
+
+    :root {
+      /* Palette — deep space base + cold blue accent */
+      --bg:        #050507;   /* preto profundo            */
+      --bg-2:      #0E0F13;   /* carvão azulado            */
+      --accent:    #6FA8FF;   /* azul Apple                */
+      --accent-2:  #8FD6FF;   /* azul gelo (highlight)     */
+      --text:      #F5F5F7;   /* branco Apple              */
+      --text-2:    #A1A1A6;   /* cinza secundário          */
+
+      /* Liquid glass surfaces */
+      --glass:        rgba(255,255,255,.06);
+      --glass-strong: rgba(255,255,255,.10);
+      --glass-border: rgba(255,255,255,.12);
+      --glass-edge:   rgba(255,255,255,.18);
+
+      /* Streetwear type stack */
+      --font-display: 'Clash Display', 'Helvetica Neue', Arial, sans-serif;
+      --font-body:    'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+      --font-mono:    'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+      --container: 1180px;
+      --gutter: clamp(1.25rem, 4vw, 3rem);
+
+      /* "soft square" radius — intermediate, not pill / not sharp */
+      --radius:        14px;  /* cards / panels  */
+      --radius-btn:    12px;  /* buttons         */
+      --radius-input:  12px;  /* inputs          */
+
+      /* Apple's signature springy easing */
+      --ease: cubic-bezier(.22, 1, .36, 1);
+      --blur: 20px;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    body {
+      /* radial space gradient #14161D -> #050507 */
+      background:
+        radial-gradient(ellipse 120% 90% at 50% 0%, #14161D 0%, var(--bg-2) 38%, var(--bg) 100%);
+      background-attachment: fixed;
+    }
+
+    ::selection { background: var(--accent); color: #04060c; }
+
+    /* =========================================================
+       PAGE BACKGROUND — slow blurred orbs the glass refracts
+       ========================================================= */
+    .bg-orbs { position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(90px); will-change: transform; }
+    .orb-1 {
+      width: 540px; height: 540px; top: -12%; left: -8%;
+      background: radial-gradient(circle, rgba(111,168,255,.40), transparent 70%);
+      animation: drift1 26s ease-in-out infinite;
+    }
+    .orb-2 {
+      width: 480px; height: 480px; bottom: -14%; right: -8%;
+      background: radial-gradient(circle, rgba(143,214,255,.28), transparent 70%);
+      animation: drift2 32s ease-in-out infinite;
+    }
+    .orb-3 {
+      width: 420px; height: 420px; top: 42%; left: 56%;
+      background: radial-gradient(circle, rgba(111,168,255,.16), transparent 70%);
+      animation: drift1 38s ease-in-out infinite reverse;
+    }
+    @keyframes drift1 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%     { transform: translate(60px,40px) scale(1.12); }
+    }
+    @keyframes drift2 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%     { transform: translate(-50px,-46px) scale(1.1); }
+    }
+    .bg-vignette {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 58%, rgba(0,0,0,.55) 100%);
+    }
+
+    /* =========================================================
+       FILM GRAIN — subtle noise over the whole screen
+       ========================================================= */
+    .grain {
+      position: fixed; inset: -120px; z-index: 60; pointer-events: none;
+      opacity: .05;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 140px 140px;
+      animation: grainShift .55s steps(2) infinite;
+      mix-blend-mode: overlay;
+    }
+    @keyframes grainShift {
+      0%   { transform: translate(0, 0); }
+      100% { transform: translate(-7px, 5px); }
+    }
+
+    /* desktop-only cursor glow */
+    .cursor-glow {
+      position: fixed; left: 0; top: 0; z-index: 55;
+      width: 440px; height: 440px; border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(111,168,255,.14), transparent 62%);
+      opacity: 0;
+      transition: opacity .35s var(--ease);
+      will-change: transform;
+    }
+    @media (pointer: coarse) { .cursor-glow { display: none; } }
+
+    /* =========================================================
+       LAYOUT HELPERS
+       ========================================================= */
+    .container { width: 100%; max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+    .section { padding: clamp(4.5rem, 11vh, 9rem) 0; position: relative; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: .6rem;
+      font-family: var(--font-mono);
+      font-weight: 400;
+      font-size: .7rem;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      margin-bottom: 1.1rem;
+    }
+    .eyebrow::before {
+      content: ""; width: 22px; height: 1px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      display: inline-block;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2.4rem, 6vw, 4.6rem);
+      letter-spacing: -.03em;
+      line-height: 1.02;
+      margin-bottom: 2.6rem;
+    }
+    .grad {
+      background: linear-gradient(120deg, var(--accent) 0%, var(--accent-2) 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+
+    /* =========================================================
+       LIQUID GLASS — the core surface treatment
+       ========================================================= */
+    .glass {
+      position: relative;
+      background: linear-gradient(155deg, var(--glass-strong) 0%, var(--glass) 55%, rgba(255,255,255,.03) 100%);
+      backdrop-filter: blur(var(--blur)) saturate(180%);
+      -webkit-backdrop-filter: blur(var(--blur)) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow:
+        0 18px 50px rgba(0,0,0,.55),
+        0 2px 8px rgba(0,0,0,.4),
+        inset 0 1px 0 var(--glass-edge),
+        inset 0 -1px 0 rgba(0,0,0,.35);
+      overflow: hidden;
+    }
+    /* top light reflection */
+    .glass::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 42%;
+      background: linear-gradient(180deg, rgba(255,255,255,.12) 0%, transparent 100%);
+      pointer-events: none;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    /* hover refraction — lift + brighten edge */
+    .glass-hover {
+      transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .5s var(--ease);
+    }
+    .glass-hover:hover {
+      transform: translateY(-6px);
+      border-color: rgba(143,214,255,.4);
+      box-shadow:
+        0 30px 70px rgba(0,0,0,.6),
+        0 0 40px rgba(111,168,255,.18),
+        inset 0 1px 0 rgba(255,255,255,.28),
+        inset 0 -1px 0 rgba(0,0,0,.35);
+    }
+
+    /* =========================================================
+       BUTTONS — liquid glass + shine sweep + ripple, soft square
+       ========================================================= */
+    .btn {
+      position: relative;
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: .6rem;
+      padding: .95rem 1.8rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: .92rem;
+      letter-spacing: -.01em;
+      border-radius: var(--radius-btn);
+      cursor: pointer;
+      overflow: hidden;
+      isolation: isolate;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease);
+    }
+    .btn svg { width: 18px; height: 18px; transition: transform .35s var(--ease); }
+    .btn:hover svg { transform: scale(1.12); }
+    /* shine sweep */
+    .btn::before {
+      content: "";
+      position: absolute; top: 0; left: -130%;
+      width: 65%; height: 100%;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent);
+      transform: skewX(-22deg);
+      transition: left .65s var(--ease);
+      pointer-events: none; z-index: 2;
+    }
+    .btn:hover::before { left: 150%; }
+    .btn:hover  { transform: scale(1.03) translateY(-1px); }
+    .btn:active { transform: scale(.97); }
+
+    /* primary — blue glass with pulsing glow */
+    .btn-primary {
+      color: #04060c;
+      background: linear-gradient(135deg, rgba(143,214,255,.95) 0%, rgba(111,168,255,.92) 100%);
+      border: 1px solid rgba(255,255,255,.45);
+      box-shadow:
+        0 10px 30px rgba(111,168,255,.34),
+        inset 0 1px 0 rgba(255,255,255,.6);
+      animation: glowPulse 3.6s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%,100% { box-shadow: 0 10px 30px rgba(111,168,255,.30), inset 0 1px 0 rgba(255,255,255,.6); }
+      50%     { box-shadow: 0 12px 44px rgba(111,168,255,.60), 0 0 26px rgba(143,214,255,.4), inset 0 1px 0 rgba(255,255,255,.6); }
+    }
+    .btn-primary:hover {
+      box-shadow: 0 16px 50px rgba(111,168,255,.6), 0 0 34px rgba(143,214,255,.5), inset 0 1px 0 rgba(255,255,255,.7);
+    }
+
+    /* glass — translucent ghost */
+    .btn-glass {
+      color: var(--text);
+      background: linear-gradient(155deg, var(--glass-strong), var(--glass));
+      backdrop-filter: blur(var(--blur)) saturate(180%);
+      -webkit-backdrop-filter: blur(var(--blur)) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 26px rgba(0,0,0,.45), inset 0 1px 0 var(--glass-edge);
+    }
+    .btn-glass:hover { border-color: rgba(143,214,255,.45); }
+
+    /* ripple element injected by JS */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,.45);
+      transform: scale(0);
+      animation: ripple .6s var(--ease);
+      pointer-events: none; z-index: 1;
+    }
+    @keyframes ripple { to { transform: scale(2.6); opacity: 0; } }
+
+    /* =========================================================
+       NAVBAR — liquid glass, shrinks on scroll
+       ========================================================= */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem;
+      padding: 1.15rem var(--gutter);
+      transition: padding .4s var(--ease), background .4s var(--ease),
+                  backdrop-filter .4s var(--ease), border-color .4s var(--ease);
+      border-bottom: 1px solid transparent;
+    }
+    .nav.scrolled {
+      padding: .6rem var(--gutter);
+      background: linear-gradient(180deg, rgba(10,11,15,.78), rgba(10,11,15,.55));
+      backdrop-filter: blur(var(--blur)) saturate(180%);
+      -webkit-backdrop-filter: blur(var(--blur)) saturate(180%);
+      border-bottom: 1px solid var(--glass-border);
+      box-shadow: 0 8px 30px rgba(0,0,0,.4);
+    }
+    .nav-logo { height: 34px; opacity: .95; transition: height .4s var(--ease), opacity .3s var(--ease), filter .3s var(--ease); }
+    .nav.scrolled .nav-logo { height: 26px; }
+    .nav-logo-link:hover .nav-logo { opacity: 1; filter: drop-shadow(0 0 12px rgba(111,168,255,.6)); }
+
+    .nav-links {
+      display: flex; gap: 1.9rem;
+      font-family: var(--font-mono);
+      font-weight: 400; font-size: .76rem; letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .nav-links a {
+      position: relative; color: var(--text-2);
+      transition: color .25s var(--ease);
+    }
+    .nav-links a::after {
+      content: ""; position: absolute; left: 0; bottom: -5px;
+      width: 0; height: 1.5px; border-radius: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width .3s var(--ease);
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-cta { padding: .62rem 1.3rem; font-size: .85rem; }
+
+    @media (max-width: 760px) {
+      .nav-links { display: none; }
+    }
+
+    /* =========================================================
+       HERO — video bg + layered "album drop" (glow / name / figure)
+       ========================================================= */
+    .hero {
+      position: relative;
+      isolation: isolate;            /* contain internal z-index stack */
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex; align-items: center;
+      padding: 8.5rem 0 6rem;
+      overflow: hidden;
+    }
+
+    /* --- video background ---
+       blurred on purpose: the source clip carries its own branding,
+       so we dissolve it into ambient light/motion behind the name. */
+    .hero-video {
+      position: absolute; left: -3%; top: -15%;
+      width: 106%; height: 130%;
+      object-fit: cover;
+      z-index: 0;
+      will-change: transform;
+      filter: saturate(120%) contrast(106%) blur(8px);
+    }
+    /* legibility overlays — heavy enough to mute the video's own
+       branding so our hero name stays the single focal point */
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(5,5,7,.74) 0%, rgba(5,5,7,.56) 38%, rgba(5,5,7,.86) 80%, var(--bg) 100%),
+        radial-gradient(ellipse 90% 70% at 50% 42%, rgba(5,5,7,.34) 0%, rgba(5,5,7,.74) 100%);
+    }
+    /* cold blue tint */
+    .hero-tint {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(160deg, rgba(36,72,128,.40), rgba(8,12,24,.32));
+      mix-blend-mode: color;
+    }
+
+    /* --- moving blurred orbs inside hero --- */
+    .hero-orbs { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+    .h-orb { position: absolute; border-radius: 50%; filter: blur(70px); will-change: transform; }
+    .h-orb-1 {
+      width: 360px; height: 360px; top: 8%; left: 6%;
+      background: radial-gradient(circle, rgba(111,168,255,.34), transparent 70%);
+      animation: drift1 30s ease-in-out infinite;
+    }
+    .h-orb-2 {
+      width: 300px; height: 300px; bottom: 4%; right: 22%;
+      background: radial-gradient(circle, rgba(143,214,255,.22), transparent 70%);
+      animation: drift2 36s ease-in-out infinite;
+    }
+
+    /* --- particle canvas --- */
+    .hero-particles { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+
+    /* --- radial blue glow behind the figure --- */
+    .hero-glow {
+      position: absolute; z-index: 2; pointer-events: none;
+      right: 2%; bottom: -10%;
+      width: min(640px, 80vw); height: min(640px, 80vw);
+      background: radial-gradient(circle,
+        rgba(111,168,255,.52) 0%, rgba(111,168,255,.17) 42%, transparent 70%);
+      filter: blur(20px);
+      animation: glowPulse2 6.5s ease-in-out infinite;
+      will-change: transform, opacity;
+    }
+    @keyframes glowPulse2 {
+      0%,100% { opacity: .62; }
+      50%     { opacity: 1; }
+    }
+
+    /* --- scattered mono decorative codes (technical-artwork vibe) --- */
+    .hero-deco { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+    .deco {
+      position: absolute;
+      font-family: var(--font-mono);
+      font-size: .6rem; font-weight: 400;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(143,214,255,.34);
+      white-space: nowrap;
+    }
+    .deco-1 { top: 21%; left: var(--gutter); }
+    .deco-2 { top: 15%; right: var(--gutter); }
+    .deco-3 { bottom: 32%; left: var(--gutter); }
+    .deco-4 { bottom: 13%; left: 36%; }
+    .deco-5 {
+      top: 38%; right: 7%;
+      writing-mode: vertical-rl; letter-spacing: .3em;
+    }
+
+    /* --- the cutout figure: bottom-right, emerging from the base --- */
+    .hero-figure-layer {
+      position: absolute; z-index: 5; pointer-events: none;
+      right: clamp(-2rem, 1vw, 3.5rem); bottom: 0;
+      height: 95%;
+      display: flex; align-items: flex-end; justify-content: center;
+      will-change: transform;
+    }
+    /* soft contact shadow at the figure base */
+    .hero-figure-shadow {
+      position: absolute; bottom: 1.5%; left: 50%; transform: translateX(-50%);
+      width: 72%; height: 52px;
+      background: radial-gradient(ellipse, rgba(0,0,0,.82) 0%, transparent 72%);
+      filter: blur(18px);
+    }
+    .hero-figure {
+      height: 100%; width: auto;
+      object-fit: contain;
+      /* dissolve the figure's bottom edge into the hero — clean grounding */
+      -webkit-mask-image: linear-gradient(to bottom, #000 87%, transparent 100%);
+              mask-image: linear-gradient(to bottom, #000 87%, transparent 100%);
+      filter: drop-shadow(0 30px 44px rgba(0,0,0,.7))
+              drop-shadow(0 0 60px rgba(111,168,255,.22));
+      animation: floatFig 7s ease-in-out infinite;
+    }
+    @keyframes floatFig {
+      0%,100% { transform: translateY(0); }
+      50%     { transform: translateY(-14px); }
+    }
+
+    /* --- hero content column (left aligned, vertically centred) --- */
+    .hero-inner {
+      position: relative;            /* z-auto: NOT a stacking context */
+      width: 100%;
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+      display: flex; flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .hero-eyebrow {
+      position: relative; z-index: 6;
+      display: inline-flex; align-items: center; gap: .6rem;
+      font-family: var(--font-mono);
+      font-size: .74rem;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--accent-2);
+      margin-bottom: 1.4rem;
+    }
+    .pulse-dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      animation: pulseDot 2s ease-in-out infinite;
+    }
+    @keyframes pulseDot {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%     { opacity: .35; transform: scale(.7); }
+    }
+    /* typewriter caret */
+    .type-line::after {
+      content: ""; display: inline-block;
+      width: 7px; height: 1em; margin-left: 3px;
+      background: var(--accent-2);
+      vertical-align: -2px;
+      animation: caret 1s steps(1) infinite;
+    }
+    @keyframes caret { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+    /* occasional subtle glitch (toggled by JS) */
+    .type-line.glitch { animation: glitch .34s steps(2) 2; }
+    @keyframes glitch {
+      0%   { text-shadow: 1.5px 0 var(--accent), -1.5px 0 #ff4d6d; }
+      50%  { text-shadow: -1.5px 0 var(--accent), 1.5px 0 #ff4d6d; }
+      100% { text-shadow: none; }
+    }
+
+    /* massive name — sits BEHIND the figure (z 4 < figure z 5) */
+    .hero-name-layer {
+      position: relative; z-index: 4;
+      will-change: transform;
+    }
+    .hero-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(3.4rem, 12.5vw, 10rem);
+      letter-spacing: -.045em;
+      line-height: .9;
+      white-space: nowrap;
+      background: linear-gradient(180deg, #FFFFFF 0%, #93A1BC 96%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      filter: drop-shadow(0 10px 30px rgba(0,0,0,.6));
+      /* slow "breathing" — starts after the letter reveal */
+      animation: breathe 7s ease-in-out 2.6s infinite;
+    }
+    @keyframes breathe {
+      0%,100% { transform: scale(1); }
+      50%     { transform: scale(1.015); }
+    }
+    /* per-letter reveal — clip-rises bottom-up, staggered */
+    .hl {
+      display: inline-block;
+      animation: letterUp .8s var(--ease) backwards;
+      animation-delay: calc(.35s + var(--i) * .06s);
+    }
+    @keyframes letterUp {
+      from { opacity: 0; transform: translateY(.6em) rotate(3deg); }
+      to   { opacity: 1; transform: translateY(0) rotate(0); }
+    }
+
+    /* wide-tracked mono tagline under the name */
+    .hero-orig {
+      position: relative; z-index: 6;
+      margin-top: 1rem;
+      font-family: var(--font-mono);
+      font-size: clamp(.66rem, 1.5vw, .92rem);
+      letter-spacing: .5em; text-indent: .5em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+    }
+
+    .hero-sub {
+      position: relative; z-index: 6;
+      margin-top: 1.9rem;
+      font-family: var(--font-mono);
+      font-size: clamp(.7rem, 1.5vw, .82rem);
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--text-2);
+    }
+    .hero-sub .sep { color: var(--accent); margin: 0 .35em; }
+
+    .hero-actions {
+      position: relative; z-index: 6;
+      margin-top: 1.7rem;
+      display: flex; gap: .9rem; flex-wrap: wrap;
+    }
+
+    .hero-stat {
+      position: relative; z-index: 6;
+      margin-top: 1.7rem;
+      display: inline-flex; align-items: center; gap: .8rem;
+      padding: .7rem 1.3rem;
+      border-radius: var(--radius-btn);
+    }
+    .hero-stat-num {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 1.45rem;
+      letter-spacing: -.02em; color: var(--accent-2);
+    }
+    .hero-stat-label {
+      font-family: var(--font-mono);
+      font-size: .66rem; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--text-2);
+    }
+
+    /* animated scroll indicator — pinned to hero base */
+    .hero-scroll {
+      position: absolute; left: 50%; bottom: 1.5rem;
+      z-index: 6;
+      display: flex; flex-direction: column; align-items: center; gap: .6rem;
+      font-family: var(--font-mono);
+      font-size: .56rem; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--text-2);
+      animation: scrollIn 1s var(--ease) 1.5s backwards;
+    }
+    @keyframes scrollIn {
+      from { opacity: 0; transform: translate(-50%, 16px); }
+      to   { opacity: 1; transform: translate(-50%, 0); }
+    }
+    .scroll-track {
+      width: 22px; height: 34px; border-radius: 12px;
+      border: 1.5px solid rgba(255,255,255,.3);
+      display: flex; justify-content: center; padding-top: 6px;
+    }
+    .scroll-dot {
+      width: 3px; height: 7px; border-radius: 2px;
+      background: var(--accent-2);
+      animation: scrollDot 1.8s var(--ease) infinite;
+    }
+    @keyframes scrollDot {
+      0%   { opacity: 0; transform: translateY(-3px); }
+      30%  { opacity: 1; }
+      70%  { opacity: 1; }
+      100% { opacity: 0; transform: translateY(11px); }
+    }
+
+    /* staggered entrance — eyebrow / sub / actions / stat */
+    .h-rise {
+      animation: rise .9s var(--ease) backwards;
+      animation-delay: var(--d, 0s);
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(26px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* hero responsive — figure recedes, content stays readable */
+    @media (max-width: 900px) {
+      .hero-figure-layer { height: 82%; right: -4%; }
+    }
+    @media (max-width: 720px) {
+      .hero { padding: 7.5rem 0 7rem; }
+      .hero-figure-layer { height: 62%; right: -14%; opacity: .9; }
+      .deco-4, .deco-5 { display: none; }
+    }
+    @media (max-width: 480px) {
+      .hero-figure-layer { height: 52%; right: -24%; opacity: .82; }
+      .hero-orig { letter-spacing: .34em; text-indent: .34em; }
+    }
+
+    /* =========================================================
+       STATS — three liquid glass cards
+       ========================================================= */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+    .stat-card {
+      display: flex; align-items: center; gap: 1.1rem;
+      padding: 1.6rem 1.5rem;
+    }
+    .stat-icon {
+      width: 52px; height: 52px; flex-shrink: 0;
+      display: grid; place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(150deg, rgba(111,168,255,.22), rgba(111,168,255,.06));
+      border: 1px solid rgba(143,214,255,.25);
+      color: var(--accent-2);
+      transition: transform .4s var(--ease), box-shadow .4s var(--ease);
+    }
+    .stat-card:hover .stat-icon {
+      transform: scale(1.08);
+      box-shadow: 0 0 18px rgba(111,168,255,.45);
+    }
+    .stat-icon svg { width: 24px; height: 24px; }
+    .stat-meta { display: flex; flex-direction: column; line-height: 1.3; }
+    .stat-meta .label {
+      font-family: var(--font-mono);
+      font-size: .64rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--text-2);
+    }
+    .stat-meta .val {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 1.5rem; letter-spacing: -.02em;
+      color: var(--text);
+    }
+    @media (max-width: 760px) { .stats-grid { grid-template-columns: 1fr; } }
+
+    /* =========================================================
+       TOP TRACK
+       ========================================================= */
+    .track-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 820px) { .track-card { grid-template-columns: 1fr; } }
+
+    .track-cover {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      display: grid; place-items: center;
+      background:
+        radial-gradient(circle at 32% 28%, rgba(111,168,255,.35), transparent 58%),
+        linear-gradient(150deg, #1A2230 0%, #07080C 100%);
+      overflow: hidden;
+    }
+    .track-cover .cover-text {
+      text-align: center; z-index: 2; padding: 1rem;
+      font-family: var(--font-display); font-weight: 700;
+      line-height: .86; letter-spacing: -.02em;
+    }
+    .cover-text .top { display: block; font-size: clamp(2.4rem, 6vw, 4.2rem); color: var(--text); }
+    .cover-text .mid {
+      display: block; margin: .55rem 0;
+      font-family: var(--font-mono); font-weight: 400;
+      font-size: clamp(.6rem, 1.4vw, .82rem);
+      letter-spacing: .36em; color: var(--accent-2);
+    }
+    .cover-text .bot {
+      display: block;
+      font-size: clamp(3.4rem, 9vw, 6.6rem);
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+
+    .track-info {
+      padding: clamp(1.6rem, 3.4vw, 2.8rem);
+      display: flex; flex-direction: column; justify-content: space-between;
+      gap: 1.6rem;
+    }
+    .pill-badge {
+      align-self: flex-start;
+      padding: .4rem .9rem;
+      border-radius: 100px;
+      background: linear-gradient(135deg, rgba(111,168,255,.2), rgba(111,168,255,.06));
+      border: 1px solid rgba(143,214,255,.3);
+      font-family: var(--font-mono);
+      font-size: .6rem; font-weight: 400;
+      letter-spacing: .16em; text-transform: uppercase;
+      color: var(--accent-2);
+    }
+    .track-info h3 {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(1.9rem, 4vw, 2.9rem);
+      letter-spacing: -.03em; line-height: 1.04;
+      margin-top: .8rem;
+    }
+    .track-info .sub {
+      margin-top: .4rem;
+      font-family: var(--font-mono);
+      font-size: .72rem; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--text-2);
+    }
+    .track-meta-row { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .track-meta-row .item { display: flex; flex-direction: column; gap: .15rem; }
+    .track-meta-row .l {
+      font-family: var(--font-mono);
+      font-size: .58rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--text-2);
+    }
+    .track-meta-row .v {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 1.3rem; letter-spacing: -.02em; color: var(--text);
+    }
+    .track-meta-row .v.accent { color: var(--accent-2); }
+
+    /* equalizer */
+    .eq { display: flex; align-items: flex-end; gap: 4px; height: 54px; }
+    .eq span {
+      flex: 1; border-radius: 3px;
+      background: linear-gradient(to top, var(--accent), var(--accent-2));
+      animation: eqBeat 1.1s ease-in-out infinite;
+      transform-origin: bottom;
+    }
+    .eq span:nth-child(1){animation-delay:0s;height:40%}
+    .eq span:nth-child(2){animation-delay:.10s;height:70%}
+    .eq span:nth-child(3){animation-delay:.20s;height:30%}
+    .eq span:nth-child(4){animation-delay:.30s;height:90%}
+    .eq span:nth-child(5){animation-delay:.15s;height:55%}
+    .eq span:nth-child(6){animation-delay:.25s;height:75%}
+    .eq span:nth-child(7){animation-delay:.05s;height:45%}
+    .eq span:nth-child(8){animation-delay:.35s;height:85%}
+    .eq span:nth-child(9){animation-delay:.20s;height:60%}
+    .eq span:nth-child(10){animation-delay:.10s;height:35%}
+    .eq span:nth-child(11){animation-delay:.30s;height:80%}
+    .eq span:nth-child(12){animation-delay:.15s;height:50%}
+    .eq span:nth-child(13){animation-delay:.25s;height:70%}
+    .eq span:nth-child(14){animation-delay:.05s;height:90%}
+    .eq span:nth-child(15){animation-delay:.35s;height:42%}
+    .eq span:nth-child(16){animation-delay:.20s;height:64%}
+    @keyframes eqBeat {
+      0%,100% { transform: scaleY(.4); }
+      50%     { transform: scaleY(1); }
+    }
+
+    .spotify-embed { margin-top: 1.4rem; }
+    .spotify-embed iframe {
+      width: 100%; height: 152px;
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+    }
+
+    /* =========================================================
+       AUDIENCE MAP — cities
+       ========================================================= */
+    .cities { display: flex; flex-direction: column; gap: .9rem; }
+    .city {
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      gap: 1.3rem; align-items: center;
+      padding: 1.25rem 1.5rem;
+    }
+    .city .rank {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 1.9rem; letter-spacing: -.03em;
+      background: linear-gradient(160deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+    .city .body { display: flex; flex-direction: column; gap: .55rem; }
+    .city .name {
+      font-family: var(--font-display); font-weight: 600;
+      font-size: 1.15rem; letter-spacing: -.02em;
+    }
+    .city .bar {
+      height: 6px; border-radius: 100px;
+      background: rgba(255,255,255,.07);
+      overflow: hidden; position: relative;
+    }
+    .city .bar::before {
+      content: ""; position: absolute; inset: 0;
+      width: 0;
+      border-radius: 100px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 12px rgba(111,168,255,.5);
+      transition: width 1.4s var(--ease);
+    }
+    .city.visible .bar::before { width: var(--w, 0%); }
+    .city .count {
+      text-align: right;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 1.5rem; letter-spacing: -.02em; color: var(--text);
+    }
+    .city .count small {
+      display: block; margin-top: -.1rem;
+      font-family: var(--font-mono); font-weight: 400;
+      font-size: .54rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--text-2);
+    }
+    @media (max-width: 560px) {
+      .city { grid-template-columns: 40px 1fr; }
+      .city .count { grid-column: 2; text-align: left; }
+      .city .rank { font-size: 1.4rem; }
+    }
+
+    /* =========================================================
+       PLAYLIST PICK
+       ========================================================= */
+    .playlist-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: clamp(1.6rem, 4vw, 3rem);
+      align-items: center;
+      padding: clamp(1.8rem, 4vw, 3.4rem);
+    }
+    .playlist-art {
+      width: clamp(150px, 22vw, 230px);
+      aspect-ratio: 1;
+      display: grid; place-items: center;
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 30% 26%, rgba(111,168,255,.4), transparent 60%),
+        linear-gradient(150deg, #1E2838 0%, #0A0C12 100%);
+      border: 1px solid var(--glass-border);
+      box-shadow: inset 0 1px 0 var(--glass-edge), 0 14px 36px rgba(0,0,0,.5);
+      text-align: center; padding: 1rem;
+      font-family: var(--font-display); font-weight: 700;
+      letter-spacing: -.02em; line-height: 1.05;
+    }
+    .playlist-art .l1 { font-size: clamp(1.4rem, 2.4vw, 2rem); color: var(--text); }
+    .playlist-art .l2 {
+      font-size: clamp(1.4rem, 2.4vw, 2rem);
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+    .playlist-body .label {
+      font-family: var(--font-mono);
+      font-size: .62rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--accent-2); margin-bottom: .7rem;
+    }
+    .playlist-body h3 {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(1.9rem, 4.2vw, 3rem);
+      letter-spacing: -.03em; line-height: 1.04; margin-bottom: .9rem;
+    }
+    .playlist-body p {
+      font-weight: 300; font-size: .98rem;
+      color: var(--text-2); margin-bottom: 1.5rem; max-width: 52ch;
+    }
+    .playlist-body p strong { color: var(--accent-2); font-weight: 600; }
+    @media (max-width: 720px) {
+      .playlist-card { grid-template-columns: 1fr; text-align: center; }
+      .playlist-art { margin: 0 auto; }
+      .playlist-body p { margin-left: auto; margin-right: auto; }
+    }
+
+    /* =========================================================
+       BOOKING
+       ========================================================= */
+    .booking-grid {
+      display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.5rem;
+      align-items: start;
+    }
+    @media (max-width: 880px) { .booking-grid { grid-template-columns: 1fr; } }
+
+    .booking-panel { padding: clamp(1.8rem, 4vw, 2.8rem); }
+    .booking-panel .lead {
+      font-weight: 300; font-size: 1rem; color: var(--text-2);
+      margin-bottom: 1.8rem; max-width: 46ch;
+    }
+    .form { display: flex; flex-direction: column; gap: 1.05rem; }
+    .form-field { display: flex; flex-direction: column; gap: .4rem; }
+    .form-field label {
+      font-family: var(--font-mono);
+      font-size: .62rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--text-2);
+    }
+    .form-field input, .form-field textarea {
+      padding: .9rem 1.05rem;
+      border-radius: var(--radius-input);
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--glass-border);
+      color: var(--text);
+      font-weight: 300; font-size: .95rem;
+      transition: border-color .3s var(--ease), background .3s var(--ease), box-shadow .3s var(--ease);
+    }
+    .form-field input::placeholder, .form-field textarea::placeholder { color: rgba(161,161,166,.5); }
+    .form-field input:focus, .form-field textarea:focus {
+      border-color: var(--accent);
+      background: rgba(111,168,255,.06);
+      box-shadow: 0 0 0 3px rgba(111,168,255,.14);
+    }
+    .form-field input.error, .form-field textarea.error { border-color: #E0685F; }
+    .form-field textarea { min-height: 120px; resize: vertical; }
+    .form-status {
+      font-size: .82rem; letter-spacing: .02em; min-height: 1.2em; margin-top: .2rem;
+    }
+    .form-status.ok  { color: var(--accent-2); }
+    .form-status.err { color: #E89089; }
+    .form .btn { align-self: flex-start; }
+
+    .socials-panel { padding: clamp(1.8rem, 4vw, 2.4rem); }
+    .socials-panel h4 {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 1.2rem; letter-spacing: -.02em; margin-bottom: 1.2rem;
+    }
+    .socials-list { display: flex; flex-direction: column; gap: .7rem; }
+    .social-link {
+      display: flex; align-items: center; gap: .9rem;
+      padding: .85rem 1rem;
+      border-radius: var(--radius-input);
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--glass-border);
+      transition: transform .35s var(--ease), border-color .35s var(--ease), background .35s var(--ease);
+    }
+    .social-link:hover {
+      transform: translateX(5px);
+      border-color: rgba(143,214,255,.4);
+      background: rgba(111,168,255,.07);
+    }
+    .social-link .ico {
+      width: 38px; height: 38px; flex-shrink: 0;
+      display: grid; place-items: center;
+      border-radius: 10px;
+      background: linear-gradient(150deg, rgba(111,168,255,.2), rgba(111,168,255,.05));
+      color: var(--accent-2);
+      transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+    }
+    .social-link:hover .ico {
+      transform: scale(1.1);
+      box-shadow: 0 0 16px rgba(111,168,255,.45);
+    }
+    .social-link .ico svg { width: 18px; height: 18px; }
+    .social-link .txt { display: flex; flex-direction: column; line-height: 1.3; }
+    .social-link .txt b { font-weight: 600; font-size: .9rem; }
+    .social-link .txt span { font-family: var(--font-mono); font-size: .68rem; color: var(--text-2); }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+    footer {
+      padding: clamp(3.5rem, 9vh, 6rem) var(--gutter) 2.6rem;
+      text-align: center;
+      border-top: 1px solid var(--glass-border);
+    }
+    .footer-impact {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(2.4rem, 8vw, 6rem);
+      letter-spacing: -.04em; line-height: .94;
+      background: linear-gradient(180deg, #FFFFFF 0%, #8794AC 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      margin-bottom: 2.4rem;
+    }
+    .footer-logo { height: 30px; margin: 0 auto 1.4rem; opacity: .7; }
+    .footer-copy {
+      display: flex; justify-content: center; align-items: center;
+      gap: .6rem; flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: .64rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--text-2);
+    }
+    .footer-copy .dot { color: var(--accent); }
+
+    /* =========================================================
+       REVEAL ON SCROLL
+       ========================================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal[data-delay="1"] { transition-delay: .08s; }
+    .reveal[data-delay="2"] { transition-delay: .16s; }
+    .reveal[data-delay="3"] { transition-delay: .24s; }
+    .reveal[data-delay="4"] { transition-delay: .32s; }
+    .reveal[data-delay="5"] { transition-delay: .40s; }
+
+    /* =========================================================
+       MOBILE — lighter blur, calmer motion
+       ========================================================= */
+    @media (max-width: 640px) {
+      :root { --blur: 12px; }
+      .orb { filter: blur(70px); }
+      .h-orb { filter: blur(54px); }
+    }
+
+    /* respect reduced-motion — kill particles / parallax / heavy loops */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001s !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001s !important;
+        scroll-behavior: auto !important;
+      }
+      .reveal { opacity: 1; transform: none; }
+      .hl { opacity: 1; transform: none; }
+      .grain, .hero-particles, .cursor-glow { display: none; }
+      .type-line::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page background — slow blue light orbs the glass refracts -->
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="bg-vignette" aria-hidden="true"></div>
+
+  <!-- Desktop cursor glow + full-screen film grain -->
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- NAVBAR -->
+  <nav class="nav" id="nav">
+    <a class="nav-logo-link" href="#hero" aria-label="DJ Madracks Original — início">
+      <img class="nav-logo" src="assets/logo.png" alt="DJ Madracks Original" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="#track">Track</a></li>
+      <li><a href="#cities">Cidades</a></li>
+      <li><a href="#playlist">Playlist</a></li>
+      <li><a href="#booking">Booking</a></li>
+    </ul>
+    <a class="btn btn-primary nav-cta" href="https://open.spotify.com/artist/24geOPfWtbI9dqjUJf7q7n" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0a12 12 0 100 24 12 12 0 000-24zm5.5 17.3a.75.75 0 01-1 .25c-2.7-1.65-6.1-2-10.1-1.1a.75.75 0 11-.33-1.46c4.4-1 8.2-.6 11.2 1.25.36.2.46.7.23 1.06zm1.5-3.3a.94.94 0 01-1.28.3c-3.1-1.9-7.8-2.45-11.4-1.36a.93.93 0 11-.55-1.78c4.15-1.25 9.35-.65 12.9 1.5a.94.94 0 01.33 1.34zm.13-3.4c-3.7-2.2-9.8-2.4-13.3-1.32a1.12 1.12 0 11-.65-2.15c4.1-1.25 10.8-1 15 1.5a1.13 1.13 0 01-1.15 1.97z"/></svg>
+      Spotify
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero" id="hero">
+
+    <!-- video background (autoplay muted loop, poster fallback) -->
+    <video class="hero-video" id="heroVideo"
+           autoplay muted loop playsinline preload="auto"
+           poster="assets/hero-poster.jpg"
+           data-depth="4" data-scroll="0.12" aria-hidden="true">
+      <source src="assets/hero-bg.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-tint" aria-hidden="true"></div>
+
+    <!-- moving blurred orbs -->
+    <div class="hero-orbs" aria-hidden="true">
+      <span class="h-orb h-orb-1"></span>
+      <span class="h-orb h-orb-2"></span>
+    </div>
+
+    <!-- floating particle dust -->
+    <canvas class="hero-particles" id="heroParticles" aria-hidden="true"></canvas>
+
+    <!-- radial blue glow behind the figure -->
+    <div class="hero-glow" data-depth="10" data-scroll="0.05" aria-hidden="true"></div>
+
+    <!-- scattered mono decorative codes -->
+    <div class="hero-deco" aria-hidden="true">
+      <span class="deco deco-1">EST. 2026</span>
+      <span class="deco deco-2">LAT 23°33′S / LON 46°38′W</span>
+      <span class="deco deco-3">TRK · 244</span>
+      <span class="deco deco-4">MDX—0244—BR</span>
+      <span class="deco deco-5">São Paulo / Underground</span>
+    </div>
+
+    <!-- foreground: the cutout figure, emerging bottom-right -->
+    <div class="hero-figure-layer" data-depth="30" data-scroll="0.16" data-tilt="1" aria-hidden="true">
+      <div class="hero-figure-shadow"></div>
+      <img class="hero-figure" src="assets/artist-cutout.png" alt="" fetchpriority="high" />
+    </div>
+
+    <!-- hero content column -->
+    <div class="hero-inner">
+      <span class="hero-eyebrow h-rise" style="--d:.1s">
+        <i class="pulse-dot" aria-hidden="true"></i><span class="type-line" id="typeLine"></span>
+      </span>
+
+      <!-- massive name — sits behind the figure -->
+      <div class="hero-name-layer" data-depth="14" data-scroll="0.10">
+        <h1 class="hero-name" aria-label="DJ Madracks Original">
+          <span aria-hidden="true">
+            <span class="hl" style="--i:0">M</span><span class="hl" style="--i:1">A</span><span class="hl" style="--i:2">D</span><span class="hl" style="--i:3">R</span><span class="hl" style="--i:4">A</span><span class="hl" style="--i:5">C</span><span class="hl" style="--i:6">K</span><span class="hl" style="--i:7">S</span>
+          </span>
+        </h1>
+      </div>
+
+      <div class="hero-orig h-rise" style="--d:.85s" aria-hidden="true">ORIGINAL</div>
+
+      <p class="hero-sub h-rise" style="--d:.95s">DJ <span class="sep">/</span> Music Producer <span class="sep">/</span> São Paulo, BR</p>
+
+      <div class="hero-actions h-rise" style="--d:1.05s">
+        <a class="btn btn-primary" href="https://open.spotify.com/artist/24geOPfWtbI9dqjUJf7q7n" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0a12 12 0 100 24 12 12 0 000-24zm5.5 17.3a.75.75 0 01-1 .25c-2.7-1.65-6.1-2-10.1-1.1a.75.75 0 11-.33-1.46c4.4-1 8.2-.6 11.2 1.25.36.2.46.7.23 1.06zm1.5-3.3a.94.94 0 01-1.28.3c-3.1-1.9-7.8-2.45-11.4-1.36a.93.93 0 11-.55-1.78c4.15-1.25 9.35-.65 12.9 1.5a.94.94 0 01.33 1.34zm.13-3.4c-3.7-2.2-9.8-2.4-13.3-1.32a1.12 1.12 0 11-.65-2.15c4.1-1.25 10.8-1 15 1.5a1.13 1.13 0 01-1.15 1.97z"/></svg>
+          Ouça no Spotify
+        </a>
+        <a class="btn btn-glass" href="#booking">Booking</a>
+      </div>
+
+      <div class="hero-stat glass h-rise" style="--d:1.15s" aria-live="polite">
+        <span class="hero-stat-num"><span data-count="6230">0</span></span>
+        <span class="hero-stat-label">ouvintes mensais</span>
+      </div>
+    </div>
+
+    <!-- animated scroll indicator -->
+    <a class="hero-scroll" href="#track" aria-label="Rolar para o conteúdo">
+      <span>Scroll</span>
+      <i class="scroll-track" aria-hidden="true"><i class="scroll-dot"></i></i>
+    </a>
+  </header>
+
+  <!-- STATS -->
+  <section class="section" aria-label="Estatísticas do artista">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card glass glass-hover reveal" data-delay="1">
+          <div class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1v-7h3v5zM3 19a2 2 0 002 2h1v-7H3v5z"/></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="label">Ouvintes mensais</span>
+            <span class="val"><span data-count="6230">0</span></span>
+          </div>
+        </div>
+        <div class="stat-card glass glass-hover reveal" data-delay="2">
+          <div class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="label">Faixa mais tocada</span>
+            <span class="val">Tropa Dos 244</span>
+          </div>
+        </div>
+        <div class="stat-card glass glass-hover reveal" data-delay="3">
+          <div class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="label">Cidade nº 1</span>
+            <span class="val">São Paulo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOP TRACK -->
+  <section class="section" id="track">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">01 — Most Played</span>
+        <h2 class="section-title">Faixa <span class="grad">mais tocada</span></h2>
+      </div>
+
+      <article class="track-card glass glass-hover reveal">
+        <div class="track-cover">
+          <div class="cover-text">
+            <span class="top">TROPA</span>
+            <span class="mid">— DOS —</span>
+            <span class="bot">244</span>
+          </div>
+        </div>
+        <div class="track-info">
+          <div>
+            <span class="pill-badge">★ Mais tocada</span>
+            <h3>Tropa Dos 244</h3>
+            <p class="sub">Single — DJ Madracks Original</p>
+          </div>
+
+          <div class="track-meta-row">
+            <div class="item">
+              <span class="l">Reproduções</span>
+              <span class="v accent"><span data-count="11174">0</span></span>
+            </div>
+            <div class="item">
+              <span class="l">Duração</span>
+              <span class="v">2:03</span>
+            </div>
+            <div class="item">
+              <span class="l">Status</span>
+              <span class="v">On Air</span>
+            </div>
+          </div>
+
+          <div class="eq" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+
+          <a class="btn btn-primary" href="https://open.spotify.com/artist/24geOPfWtbI9dqjUJf7q7n" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            Ouvir agora
+          </a>
+        </div>
+      </article>
+
+      <div class="spotify-embed reveal" data-delay="2">
+        <iframe
+          src="https://open.spotify.com/embed/artist/24geOPfWtbI9dqjUJf7q7n?utm_source=generator&theme=0"
+          loading="lazy"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          allowfullscreen
+          title="DJ MADRACKS ORIGINAL no Spotify"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUDIENCE MAP -->
+  <section class="section" id="cities">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">02 — Audience Map</span>
+        <h2 class="section-title">Onde <span class="grad">me ouvem</span></h2>
+      </div>
+
+      <div class="cities">
+        <div class="city glass glass-hover reveal" data-delay="1" style="--w: 100%;">
+          <span class="rank">01</span>
+          <div class="body">
+            <span class="name">São Paulo</span>
+            <div class="bar" aria-hidden="true"></div>
+          </div>
+          <span class="count"><span data-count="1010">0</span><small>ouvintes</small></span>
+        </div>
+        <div class="city glass glass-hover reveal" data-delay="2" style="--w: 40%;">
+          <span class="rank">02</span>
+          <div class="body">
+            <span class="name">Porto Alegre</span>
+            <div class="bar" aria-hidden="true"></div>
+          </div>
+          <span class="count"><span data-count="408">0</span><small>ouvintes</small></span>
+        </div>
+        <div class="city glass glass-hover reveal" data-delay="3" style="--w: 27%;">
+          <span class="rank">03</span>
+          <div class="body">
+            <span class="name">Brasília</span>
+            <div class="bar" aria-hidden="true"></div>
+          </div>
+          <span class="count"><span data-count="270">0</span><small>ouvintes</small></span>
+        </div>
+        <div class="city glass glass-hover reveal" data-delay="4" style="--w: 26.6%;">
+          <span class="rank">04</span>
+          <div class="body">
+            <span class="name">Curitiba</span>
+            <div class="bar" aria-hidden="true"></div>
+          </div>
+          <span class="count"><span data-count="269">0</span><small>ouvintes</small></span>
+        </div>
+        <div class="city glass glass-hover reveal" data-delay="5" style="--w: 26.5%;">
+          <span class="rank">05</span>
+          <div class="body">
+            <span class="name">Belo Horizonte</span>
+            <div class="bar" aria-hidden="true"></div>
+          </div>
+          <span class="count"><span data-count="268">0</span><small>ouvintes</small></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAYLIST PICK -->
+  <section class="section" id="playlist">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">03 — Artist's Pick</span>
+        <h2 class="section-title">Escolha <span class="grad">do artista</span></h2>
+      </div>
+
+      <div class="playlist-card glass glass-hover reveal">
+        <div class="playlist-art" aria-hidden="true">
+          <div>
+            <div class="l1">FREQUÊNCIA</div>
+            <div class="l2">OCULTA</div>
+          </div>
+        </div>
+        <div class="playlist-body">
+          <div class="label">Playlist · Curadoria Madracks</div>
+          <h3>Frequência <span class="grad">Oculta</span></h3>
+          <p>Seleção pessoal do Madracks Original. Trap, hip-hop, drill e batidas que vivem no underground brasileiro. <strong>171 faixas</strong> · <strong>44 saves</strong>. Som que toca antes de virar hit.</p>
+          <a class="btn btn-primary" href="https://open.spotify.com/playlist/5SLbvsZLj3R7Oz1ZQvhXzW" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            Escutar playlist
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING -->
+  <section class="section" id="booking">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">04 — Booking</span>
+        <h2 class="section-title">Booking <span class="grad">&amp; contato</span></h2>
+      </div>
+
+      <div class="booking-grid">
+        <div class="booking-panel glass reveal">
+          <p class="lead">Quer o Madracks Original no seu evento? Manda info — data, local, formato. Resposta em até 48h.</p>
+          <form class="form" id="bookingForm" novalidate>
+            <div class="form-field">
+              <label for="name">Nome / Produtora</label>
+              <input id="name" name="name" type="text" required autocomplete="name" placeholder="Seu nome ou produtora" />
+            </div>
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required autocomplete="email" placeholder="voce@email.com" />
+            </div>
+            <div class="form-field">
+              <label for="msg">Mensagem · data, local, detalhes</label>
+              <textarea id="msg" name="msg" required placeholder="Conte sobre o evento…"></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">
+              Enviar
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </button>
+            <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+
+        <aside class="socials-panel glass reveal" data-delay="2">
+          <h4>Redes</h4>
+          <div class="socials-list">
+            <a class="social-link" href="https://open.spotify.com/artist/24geOPfWtbI9dqjUJf7q7n" target="_blank" rel="noopener">
+              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 100 24 12 12 0 000-24zm5.5 17.3a.75.75 0 01-1 .25c-2.7-1.65-6.1-2-10.1-1.1a.75.75 0 11-.33-1.46c4.4-1 8.2-.6 11.2 1.25.36.2.46.7.23 1.06zm1.5-3.3a.94.94 0 01-1.28.3c-3.1-1.9-7.8-2.45-11.4-1.36a.93.93 0 11-.55-1.78c4.15-1.25 9.35-.65 12.9 1.5a.94.94 0 01.33 1.34zm.13-3.4c-3.7-2.2-9.8-2.4-13.3-1.32a1.12 1.12 0 11-.65-2.15c4.1-1.25 10.8-1 15 1.5a1.13 1.13 0 01-1.15 1.97z"/></svg></span>
+              <span class="txt"><b>Spotify</b><span>DJ Madracks Original</span></span>
+            </a>
+            <a class="social-link" href="https://instagram.com/delazeri_le" target="_blank" rel="noopener">
+              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></span>
+              <span class="txt"><b>Instagram</b><span>@delazeri_le</span></span>
+            </a>
+            <a class="social-link" href="https://tiktok.com/@leandrodelazeri4" target="_blank" rel="noopener">
+              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.6 6.3a4.8 4.8 0 01-2.8-1.7 4.7 4.7 0 01-1.1-3H12v13.4a2.7 2.7 0 11-2.7-2.7c.3 0 .5 0 .8.1V9.2a6.1 6.1 0 00-.8-.1 6 6 0 106 6V8.9a8 8 0 004.6 1.4V7a4.8 4.8 0 01-.3-.7z"/></svg></span>
+              <span class="txt"><b>TikTok</b><span>@leandrodelazeri4</span></span>
+            </a>
+            <a class="social-link" href="https://linktr.ee/leandrodelazeri1" target="_blank" rel="noopener">
+              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.7 0L9.4 4.5l-2-2-1.5 1.6L8 6.2H1.8v2.3h6.3l-2 2 1.5 1.7 2.3-2.4v13.6h3.2V9.7l2.3 2.4 1.6-1.6-2.1-2H21V6.2h-6.2l2-2-1.5-1.6-2 2L13.7 0z"/></svg></span>
+              <span class="txt"><b>Linktree</b><span>/leandrodelazeri1</span></span>
+            </a>
+            <a class="social-link" href="mailto:booking@madracks.com">
+              <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></span>
+              <span class="txt"><b>Email</b><span>booking@madracks.com</span></span>
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-impact">O som<br>não dorme</div>
+    <img class="footer-logo" src="assets/logo.png" alt="DJ Madracks Original" />
+    <div class="footer-copy">
+      <span>© 2026 DJ Madracks Original</span>
+      <span class="dot">·</span>
+      <span>São Paulo, BR</span>
+      <span class="dot">·</span>
+      <span>Underground</span>
+    </div>
+  </footer>
+
+  <script>
+    'use strict';
+    const reduced    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+    const isSmall    = window.matchMedia('(max-width: 720px)').matches;
+    const saveData   = !!(navigator.connection && navigator.connection.saveData);
+
+    /* =========================================================
+       ANIMATED COUNTERS — easeOutCubic, pt-BR formatting
+       ========================================================= */
+    const fmt = new Intl.NumberFormat('pt-BR');
+    const animateCount = (el) => {
+      const target = parseInt(el.dataset.count, 10);
+      if (Number.isNaN(target)) return;
+      if (reduced) { el.textContent = fmt.format(target); return; }
+      const duration = 1800;
+      const start = performance.now();
+      const step = (now) => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = fmt.format(Math.floor(target * eased));
+        if (t < 1) requestAnimationFrame(step);
+        else el.textContent = fmt.format(target);
+      };
+      requestAnimationFrame(step);
+    };
+
+    /* =========================================================
+       REVEAL ON SCROLL + counters via IntersectionObserver
+       ========================================================= */
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        el.classList.add('visible');
+        el.querySelectorAll('[data-count]').forEach((c) => {
+          if (!c.dataset.done) { c.dataset.done = '1'; animateCount(c); }
+        });
+        io.unobserve(el);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('.reveal, .city').forEach((el) => io.observe(el));
+
+    /* hero counters fire on load */
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.hero [data-count]').forEach((c) => {
+        if (!c.dataset.done) { c.dataset.done = '1'; animateCount(c); }
+      });
+    });
+
+    /* =========================================================
+       NAVBAR — shrink + glass on scroll
+       ========================================================= */
+    const nav = document.getElementById('nav');
+    const onNavScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
+    onNavScroll();
+    window.addEventListener('scroll', onNavScroll, { passive: true });
+
+    /* =========================================================
+       HERO TYPEWRITER — mono eyebrow line + occasional glitch
+       ========================================================= */
+    const typeEl = document.getElementById('typeLine');
+    const TYPE_TEXT = 'ON AIR — SÃO PAULO, BR';
+    if (typeEl) {
+      if (reduced) {
+        typeEl.textContent = TYPE_TEXT;
+      } else {
+        let i = 0;
+        const type = () => {
+          typeEl.textContent = TYPE_TEXT.slice(0, i);
+          i++;
+          if (i <= TYPE_TEXT.length) setTimeout(type, 55);
+          else {
+            /* subtle glitch every ~7s once typing finishes */
+            setInterval(() => {
+              typeEl.classList.add('glitch');
+              setTimeout(() => typeEl.classList.remove('glitch'), 700);
+            }, 7000);
+          }
+        };
+        setTimeout(type, 350);
+      }
+    }
+
+    /* =========================================================
+       HERO VIDEO — pause when motion is unwanted / data-saving
+       ========================================================= */
+    const heroVideo = document.getElementById('heroVideo');
+    if (heroVideo && (reduced || saveData)) {
+      heroVideo.removeAttribute('autoplay');
+      heroVideo.addEventListener('loadeddata', () => heroVideo.pause());
+      try { heroVideo.pause(); } catch (e) {}
+    }
+
+    /* =========================================================
+       HERO PARALLAX — multi-layer (mouse + scroll), 3D tilt
+       Figure moves opposite the cursor for depth.
+       ========================================================= */
+    const hero   = document.getElementById('hero');
+    const pLayers = hero ? [...hero.querySelectorAll('[data-depth]')] : [];
+    let mx = 0, my = 0, cx = 0, cy = 0, sy = 0;
+
+    if (hero && !reduced && pLayers.length) {
+      if (finePointer) {
+        window.addEventListener('pointermove', (e) => {
+          mx = (e.clientX / window.innerWidth) - 0.5;
+          my = (e.clientY / window.innerHeight) - 0.5;
+        }, { passive: true });
+      }
+      const tick = () => {
+        cx += (mx - cx) * 0.07;
+        cy += (my - cy) * 0.07;
+        sy = window.scrollY;
+        for (const l of pLayers) {
+          const depth = parseFloat(l.dataset.depth)  || 0;
+          const scl   = parseFloat(l.dataset.scroll) || 0;
+          const tx = -cx * depth;
+          const ty = (-cy * depth) + (sy * scl);
+          let t = `translate3d(${tx.toFixed(2)}px, ${ty.toFixed(2)}px, 0)`;
+          if (l.dataset.tilt) {
+            t += ` rotateY(${(cx * 6).toFixed(2)}deg) rotateX(${(-cy * 4).toFixed(2)}deg)`;
+          }
+          l.style.transform = t;
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+
+    /* =========================================================
+       FLOATING PARTICLES — slow blue dust over the hero video
+       ========================================================= */
+    (function initParticles() {
+      const canvas = document.getElementById('heroParticles');
+      if (!canvas || !hero || reduced) return;
+      const ctx = canvas.getContext('2d');
+      const COUNT = isSmall ? 16 : 46;
+      let w = 0, h = 0, parts = [];
+
+      const resize = () => {
+        w = canvas.width  = hero.offsetWidth;
+        h = canvas.height = hero.offsetHeight;
+      };
+      const build = () => {
+        parts = [];
+        for (let i = 0; i < COUNT; i++) {
+          parts.push({
+            x:  Math.random() * w,
+            y:  Math.random() * h,
+            r:  Math.random() * 1.7 + 0.5,
+            vx: (Math.random() - 0.5) * 0.18,
+            vy: -(Math.random() * 0.25 + 0.05),
+            a:  Math.random() * 0.5 + 0.15
+          });
+        }
+      };
+      const draw = () => {
+        ctx.clearRect(0, 0, w, h);
+        for (const p of parts) {
+          p.x += p.vx; p.y += p.vy;
+          if (p.y < -12)     { p.y = h + 12; p.x = Math.random() * w; }
+          if (p.x < -12)     p.x = w + 12;
+          if (p.x > w + 12)  p.x = -12;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle   = 'rgba(143,214,255,' + p.a + ')';
+          ctx.shadowBlur  = 6;
+          ctx.shadowColor = 'rgba(111,168,255,.7)';
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      };
+
+      resize(); build(); draw();
+      let rt;
+      window.addEventListener('resize', () => {
+        clearTimeout(rt);
+        rt = setTimeout(() => { resize(); build(); }, 200);
+      }, { passive: true });
+    })();
+
+    /* =========================================================
+       DESKTOP CURSOR GLOW — soft blue light follows the pointer
+       ========================================================= */
+    (function cursorGlow() {
+      const glow = document.querySelector('.cursor-glow');
+      if (!glow || !finePointer || reduced) return;
+      let gx = window.innerWidth / 2, gy = window.innerHeight / 2;
+      let tx = gx, ty = gy, shown = false;
+      window.addEventListener('pointermove', (e) => {
+        tx = e.clientX; ty = e.clientY;
+        if (!shown) { glow.style.opacity = '1'; shown = true; }
+      }, { passive: true });
+      const loop = () => {
+        gx += (tx - gx) * 0.15;
+        gy += (ty - gy) * 0.15;
+        glow.style.transform = 'translate(' + gx + 'px,' + gy + 'px) translate(-50%,-50%)';
+        requestAnimationFrame(loop);
+      };
+      requestAnimationFrame(loop);
+    })();
+
+    /* =========================================================
+       BUTTON RIPPLE — pointer-positioned
+       ========================================================= */
+    document.querySelectorAll('.btn').forEach((btn) => {
+      btn.addEventListener('pointerdown', (e) => {
+        if (reduced) return;
+        const rect = btn.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const r = document.createElement('span');
+        r.className = 'ripple';
+        r.style.width = r.style.height = size + 'px';
+        r.style.left = (e.clientX - rect.left - size / 2) + 'px';
+        r.style.top  = (e.clientY - rect.top  - size / 2) + 'px';
+        btn.appendChild(r);
+        setTimeout(() => r.remove(), 650);
+      });
+    });
+
+    /* =========================================================
+       BOOKING FORM — validation + mailto fallback
+       ========================================================= */
+    const form = document.getElementById('bookingForm');
+    const status = document.getElementById('formStatus');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name  = form.name.value.trim();
+      const email = form.email.value.trim();
+      const msg   = form.msg.value.trim();
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      [form.name, form.email, form.msg].forEach((f) => f.classList.remove('error'));
+      status.className = 'form-status';
+      status.textContent = '';
+
+      let bad = false;
+      if (!name)                { form.name.classList.add('error');  bad = true; }
+      if (!emailRe.test(email)) { form.email.classList.add('error'); bad = true; }
+      if (!msg)                 { form.msg.classList.add('error');   bad = true; }
+
+      if (bad) {
+        status.className = 'form-status err';
+        status.textContent = 'Preencha todos os campos com um email válido.';
+        return;
+      }
+
+      const subject = encodeURIComponent('[BOOKING] ' + name);
+      const body = encodeURIComponent('Nome: ' + name + '\nEmail: ' + email + '\n\n' + msg);
+      window.location.href = 'mailto:booking@madracks.com?subject=' + subject + '&body=' + body;
+      status.className = 'form-status ok';
+      status.textContent = 'Abrindo seu cliente de email…';
+      form.reset();
+    });
+
+    /* =========================================================
+       SMOOTH ANCHOR SCROLL — offset for fixed navbar
+       ========================================================= */
+    document.querySelectorAll('a[href^="#"]').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        const id = a.getAttribute('href');
+        if (id.length <= 1) return;
+        const target = document.querySelector(id);
+        if (!target) return;
+        e.preventDefault();
+        const y = target.getBoundingClientRect().top + window.scrollY - 68;
+        window.scrollTo({ top: y, behavior: reduced ? 'auto' : 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
