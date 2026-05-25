@@ -81,7 +81,7 @@
 
       /* Apple's signature springy easing */
       --ease: cubic-bezier(.22, 1, .36, 1);
-      --blur: 20px;
+      --blur: 14px; /* reduced from 20px — imperceptível visualmente, real GPU savings */
       scroll-behavior: smooth;
     }
 
@@ -331,8 +331,8 @@
       display: flex; align-items: center; justify-content: space-between;
       gap: 1rem;
       padding: 1.15rem var(--gutter);
-      transition: padding .4s var(--ease), background .4s var(--ease),
-                  backdrop-filter .4s var(--ease), border-color .4s var(--ease);
+      /* no padding/backdrop-filter transition — both cause layout/GPU recomposite on scroll */
+      transition: background .4s var(--ease), border-color .4s var(--ease), box-shadow .4s var(--ease);
       border-bottom: 1px solid transparent;
     }
     .nav.scrolled {
@@ -343,7 +343,8 @@
       border-bottom: 1px solid var(--glass-border);
       box-shadow: 0 8px 30px rgba(0,0,0,.4);
     }
-    .nav-logo { height: 34px; opacity: .95; transition: height .4s var(--ease), opacity .3s var(--ease), filter .3s var(--ease); }
+    /* removed height transition — height causes layout reflow; use opacity/filter (compositor only) */
+    .nav-logo { height: 34px; opacity: .95; transition: opacity .3s var(--ease), filter .3s var(--ease); }
     .nav.scrolled .nav-logo { height: 26px; }
     .nav-logo-link:hover .nav-logo { opacity: 1; filter: drop-shadow(0 0 12px rgba(111,168,255,.6)); }
 
@@ -1080,8 +1081,8 @@
     /* =========================================================
        MOBILE — lighter blur, calmer motion
        ========================================================= */
-    @media (max-width: 640px) {
-      :root { --blur: 12px; }
+    @media (max-width: 768px) {
+      :root { --blur: 8px; } /* mobile: 8px — GPU economized */
       .orb { filter: blur(70px); }
       .h-orb { filter: blur(54px); }
     }
@@ -1464,9 +1465,8 @@
     const reduced     = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const finePointer = window.matchMedia('(pointer: fine)').matches;
     const isSmall     = window.matchMedia('(max-width: 720px)').matches;
-    /* saveData: only respect explicit Data Saver toggle — effectiveType is unreliable
-       (browsers often report '3g' on good WiFi, would pause video unnecessarily) */
-    const saveData = !!(navigator.connection && navigator.connection.saveData);
+    const isMobile    = window.matchMedia('(max-width: 768px)').matches;
+    const saveData    = !!(navigator.connection && navigator.connection.saveData);
 
     /* ─── utilities ─────────────────────────────────────────────── */
     const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
@@ -1475,6 +1475,11 @@
     /* ─── scroll state — save in event, apply in rAF (no jank) ─── */
     let _scrollY = window.scrollY;
     window.addEventListener('scroll', () => { _scrollY = window.scrollY; }, { passive: true });
+
+    /* ─── mobile: disable orb animations (they use filter:blur — GPU heavy) ─── */
+    if (isMobile || reduced) {
+      document.querySelectorAll('.orb, .h-orb').forEach(o => o.style.animationPlayState = 'paused');
+    }
 
     /* =========================================================
        ANIMATED COUNTERS — easeOutCubic, pt-BR formatting
@@ -1523,13 +1528,13 @@
     }, { passive: true });
 
     /* =========================================================
-       NAVBAR — shrink + glass on scroll
-       Reads _scrollY (saved by scroll listener above — no layout read)
+       NAVBAR — state managed inside mainLoop (not scroll callback)
+       DOM writes in scroll callbacks cause style recalc jank.
+       _scrollY is read (set by passive listener above), written in rAF.
        ========================================================= */
     const nav = document.getElementById('nav');
-    const onNavScroll = () => nav.classList.toggle('scrolled', _scrollY > 40);
-    onNavScroll();
-    window.addEventListener('scroll', onNavScroll, { passive: true });
+    let _navScrolled = _scrollY > 40;
+    if (_navScrolled) nav.classList.add('scrolled');
 
     /* =========================================================
        HERO TYPEWRITER — deferred via requestIdleCallback
@@ -1546,10 +1551,12 @@
             typeEl.textContent = TYPE_TEXT.slice(0, i++);
             if (i <= TYPE_TEXT.length) setTimeout(type, 55);
             else {
-              setInterval(() => {
+              /* recursive setTimeout — setInterval for animation is prohibited (cannot be cancelled cleanly) */
+              const scheduleGlitch = () => setTimeout(() => {
                 typeEl.classList.add('glitch');
-                setTimeout(() => typeEl.classList.remove('glitch'), 700);
+                setTimeout(() => { typeEl.classList.remove('glitch'); scheduleGlitch(); }, 700);
               }, 7000);
+              scheduleGlitch();
             }
           };
           setTimeout(type, 350);
@@ -1583,6 +1590,11 @@
     }
 
     function mainLoop() {
+      /* ── navbar scroll state (DOM write only when state changes) ── */
+      if (nav) {
+        const _ns = _scrollY > 40;
+        if (_ns !== _navScrolled) { _navScrolled = _ns; nav.classList.toggle('scrolled', _ns); }
+      }
       /* ── parallax (mouse + scroll) ── */
       if (hero && !reduced && pLayers.length) {
         cx += (mx - cx) * 0.07;
@@ -1620,7 +1632,7 @@
       const canvas = document.getElementById('heroParticles');
       if (!canvas || !hero || reduced) return;
 
-      const COUNT = isSmall ? 16 : 46;
+      const COUNT = isMobile ? 12 : 46; /* mobile: ~26% of desktop count — PDF target ≤30% */
 
       if (typeof OffscreenCanvas !== 'undefined' && canvas.transferControlToOffscreen) {
         /* ── Worker path — physics off main thread ── */
