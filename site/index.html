@@ -32,7 +32,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@700&family=Anton&family=Bungee&family=Big+Shoulders+Display:wght@700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
     /* =========================================================
@@ -545,6 +545,24 @@
       0%,100% { transform: scale(1); }
       50%     { transform: scale(1.015); }
     }
+    /* MADRACKS font-cycle caret */
+    .name-caret {
+      display: inline-block;
+      -webkit-text-fill-color: var(--accent-2);
+      color: var(--accent-2);
+      opacity: 0;
+      margin-left: .04em;
+      font-style: normal;
+      font-weight: 400;
+      font-size: .85em;
+      vertical-align: baseline;
+    }
+    .name-caret.blink { animation: caretBlink .7s step-end infinite; }
+    @keyframes caretBlink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
     /* per-letter reveal — clip-rises bottom-up, staggered */
     .hl {
       display: inline-block;
@@ -1111,9 +1129,7 @@
       <!-- massive name — sits behind the figure -->
       <div class="hero-name-layer" data-depth="14" data-scroll="0.10">
         <h1 class="hero-name" aria-label="DJ Madracks Original">
-          <span aria-hidden="true">
-            <span class="hl" style="--i:0">M</span><span class="hl" style="--i:1">A</span><span class="hl" style="--i:2">D</span><span class="hl" style="--i:3">R</span><span class="hl" style="--i:4">A</span><span class="hl" style="--i:5">C</span><span class="hl" style="--i:6">K</span><span class="hl" style="--i:7">S</span>
-          </span>
+          <span id="nameText" aria-hidden="true"><span class="hl" style="--i:0">M</span><span class="hl" style="--i:1">A</span><span class="hl" style="--i:2">D</span><span class="hl" style="--i:3">R</span><span class="hl" style="--i:4">A</span><span class="hl" style="--i:5">C</span><span class="hl" style="--i:6">K</span><span class="hl" style="--i:7">S</span></span><span class="name-caret" id="nameCaret" aria-hidden="true" style="-webkit-text-fill-color:var(--accent-2);color:var(--accent-2)">|</span>
         </h1>
       </div>
 
@@ -1416,6 +1432,66 @@
             setTimeout(type, 200);
           });
         }
+      }
+
+      /* ── MADRACKS font cycle ────────────────────────────────────── */
+      const nameText = document.getElementById('nameText');
+      const nameCaret = document.getElementById('nameCaret');
+
+      if (nameText && nameCaret && !reduced) {
+        const CYCLE_FONTS = [
+          { family: "'Clash Display', sans-serif",        ls: '-.045em', fw: '700' },
+          { family: "'Bebas Neue', sans-serif",            ls: '.06em',   fw: '400' },
+          { family: "'Oswald', sans-serif",                ls: '.01em',   fw: '700' },
+          { family: "'Anton', sans-serif",                 ls: '.03em',   fw: '400' },
+          { family: "'Bungee', sans-serif",                ls: '-.01em',  fw: '400' },
+          { family: "'Big Shoulders Display', sans-serif", ls: '.04em',   fw: '700' },
+        ];
+        const WORD = 'MADRACKS';
+        const h1 = nameText.closest('.hero-name');
+        let cidx = 0;
+
+        const nameErase = (cb) => {
+          let t = nameText.textContent;
+          const step = () => {
+            if (!t) { cb(); return; }
+            t = t.slice(0, -1);
+            nameText.textContent = t;
+            setTimeout(step, 48 + Math.random() * 38);
+          };
+          setTimeout(step, 60);
+        };
+
+        const nameWrite = (font, cb) => {
+          h1.style.fontFamily = font.family;
+          h1.style.letterSpacing = font.ls;
+          h1.style.fontWeight = font.fw;
+          let t = '';
+          const step = () => {
+            if (t.length === WORD.length) { cb(); return; }
+            t += WORD[t.length];
+            nameText.textContent = t;
+            setTimeout(step, 42 + Math.random() * 52);
+          };
+          step();
+        };
+
+        const cycle = () => {
+          nameCaret.classList.remove('blink');
+          cidx = (cidx + 1) % CYCLE_FONTS.length;
+          nameErase(() => nameWrite(CYCLE_FONTS[cidx], () => {
+            nameCaret.classList.add('blink');
+            setTimeout(cycle, 4000 + Math.random() * 2000);
+          }));
+        };
+
+        /* wait for .hl entrance letters to finish, then collapse & start */
+        const entranceEnd = (.35 + 7 * .06 + .8) * 1000 + 700; /* ~2270ms */
+        setTimeout(() => {
+          nameText.textContent = WORD;
+          nameCaret.classList.add('blink');
+          setTimeout(cycle, 3500);
+        }, entranceEnd);
       }
     }
 
