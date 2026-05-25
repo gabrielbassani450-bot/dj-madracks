@@ -407,8 +407,6 @@
       animation: drift2 36s ease-in-out infinite;
     }
 
-    /* --- particle canvas --- */
-    .hero-particles { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
 
     /* --- radial blue glow behind the figure --- */
     .hero-glow {
@@ -1017,8 +1015,6 @@
       <span class="h-orb h-orb-2"></span>
     </div>
 
-    <!-- floating particle dust -->
-    <canvas class="hero-particles" id="heroParticles" aria-hidden="true"></canvas>
 
     <!-- radial blue glow behind the figure -->
     <div class="hero-glow" data-depth="10" data-scroll="0.05" aria-hidden="true"></div>
@@ -1419,125 +1415,6 @@
     }
     if (!reduced) requestAnimationFrame(mainLoop);
 
-    /* =========================================================
-       PARTICLES — OffscreenCanvas Web Worker
-       Physics runs on separate thread → main thread 100% free.
-       Fallback: main thread with -40% particles if no OffscreenCanvas.
-       Float32Array for positions/velocities (faster than object array).
-       FPS-normalised via delta/16.67 — runs identically at 60 or 120hz.
-       ========================================================= */
-    (function initParticles() {
-      const canvas = document.getElementById('heroParticles');
-      if (!canvas || !hero || reduced) return;
-
-      const COUNT = isMobile ? 12 : 46; /* mobile: ~26% of desktop count — PDF target ≤30% */
-
-      if (typeof OffscreenCanvas !== 'undefined' && canvas.transferControlToOffscreen) {
-        /* ── Worker path — physics off main thread ── */
-        const offscreen = canvas.transferControlToOffscreen();
-
-        const workerSrc = `'use strict';
-let ctx, w, h, count;
-const S = 6; /* stride: x y vx vy r a */
-let buf;
-self.onmessage = function(ev) {
-  if (ev.data.type === 'resize') { w = ev.data.width; h = ev.data.height; return; }
-  const cv = ev.data.canvas;
-  w = ev.data.width; h = ev.data.height; count = ev.data.count;
-  cv.width = w; cv.height = h;
-  ctx = cv.getContext('2d');
-  buf = new Float32Array(count * S);
-  for (let i = 0; i < count; i++) {
-    const b = i * S;
-    buf[b]   = Math.random() * w;
-    buf[b+1] = Math.random() * h;
-    buf[b+2] = (Math.random() - 0.5) * 0.18;
-    buf[b+3] = -(Math.random() * 0.25 + 0.05);
-    buf[b+4] = Math.random() * 1.7 + 0.5;
-    buf[b+5] = Math.random() * 0.5 + 0.15;
-  }
-  let last = 0;
-  function draw(ts) {
-    const d = Math.min(ts - last, 50); last = ts;
-    const s = d / 16.67;
-    ctx.clearRect(0, 0, w, h);
-    for (let i = 0; i < count; i++) {
-      const b = i * S;
-      buf[b]   += buf[b+2] * s;
-      buf[b+1] += buf[b+3] * s;
-      if (buf[b+1] < -12) { buf[b+1] = h + 12; buf[b] = Math.random() * w; }
-      if (buf[b]   < -12)   buf[b] = w + 12;
-      if (buf[b]   > w + 12) buf[b] = -12;
-      /* no shadowBlur — forces software render path */
-      ctx.beginPath();
-      ctx.arc(buf[b], buf[b+1], buf[b+4], 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(143,214,255,' + buf[b+5] + ')';
-      ctx.fill();
-    }
-    self.requestAnimationFrame(draw);
-  }
-  self.requestAnimationFrame(draw);
-};`;
-
-        const blob   = new Blob([workerSrc], { type: 'application/javascript' });
-        const worker = new Worker(URL.createObjectURL(blob));
-
-        worker.postMessage({
-          canvas: offscreen,
-          width:  hero.offsetWidth,
-          height: hero.offsetHeight,
-          count:  COUNT
-        }, [offscreen]);
-
-        window.addEventListener('resize', debounce(() => {
-          worker.postMessage({ type: 'resize', width: hero.offsetWidth, height: hero.offsetHeight });
-        }, 200), { passive: true });
-
-      } else {
-        /* ── Fallback: main thread, 40% fewer particles ── */
-        const FB  = Math.floor(COUNT * 0.6);
-        const ctx = canvas.getContext('2d');
-        const S   = 6;
-        let w = 0, h = 0;
-        const buf = new Float32Array(FB * S);
-
-        const resize = () => { w = canvas.width = hero.offsetWidth; h = canvas.height = hero.offsetHeight; };
-        const init   = () => {
-          for (let i = 0; i < FB; i++) {
-            const b = i * S;
-            buf[b]   = Math.random() * w;
-            buf[b+1] = Math.random() * h;
-            buf[b+2] = (Math.random() - 0.5) * 0.18;
-            buf[b+3] = -(Math.random() * 0.25 + 0.05);
-            buf[b+4] = Math.random() * 1.7 + 0.5;
-            buf[b+5] = Math.random() * 0.5 + 0.15;
-          }
-        };
-        let last = 0;
-        const draw = (ts) => {
-          const d = Math.min(ts - last, 50); last = ts;
-          const s = d / 16.67;
-          ctx.clearRect(0, 0, w, h);
-          for (let i = 0; i < FB; i++) {
-            const b = i * S;
-            buf[b]   += buf[b+2] * s;
-            buf[b+1] += buf[b+3] * s;
-            if (buf[b+1] < -12) { buf[b+1] = h + 12; buf[b] = Math.random() * w; }
-            if (buf[b]   < -12)   buf[b] = w + 12;
-            if (buf[b]   > w + 12) buf[b] = -12;
-            /* no shadowBlur — forces software render path */
-            ctx.beginPath();
-            ctx.arc(buf[b], buf[b+1], buf[b+4], 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(143,214,255,' + buf[b+5] + ')';
-            ctx.fill();
-          }
-          requestAnimationFrame(draw);
-        };
-
-        resize(); init(); requestAnimationFrame(draw);
-        window.addEventListener('resize', debounce(() => { resize(); init(); }, 200), { passive: true });
-      }
-    })();
 
     /* =========================================================
        BUTTON RIPPLE — pointer-positioned
