@@ -1042,6 +1042,63 @@
     body.ready .hl,
     body.ready .h-rise { animation-play-state: running; }
 
+    /* =========================================================
+       RESPONSIVE — mobile / tablet layout fixes
+       ========================================================= */
+
+    /* prevent horizontal overflow on all screens */
+    html, body { overflow-x: hidden; }
+
+    /* ── TABLET (≤ 900px) ── */
+    @media (max-width: 900px) {
+      .hero-inner { align-items: center; text-align: center; }
+      .hero-eyebrow { justify-content: center; }
+      .hero-actions { justify-content: center; }
+      .hero-stat { margin: 0 auto; }
+      .hero-figure-layer { opacity: .35; }
+      .eyebrow { display: flex; justify-content: center; }
+      .section-title { text-align: center; }
+    }
+
+    /* ── MOBILE (≤ 768px) ── */
+    @media (max-width: 768px) {
+      .hero {
+        align-items: center;
+        padding: 6.5rem 0 5rem;
+      }
+      .hero-inner {
+        align-items: center;
+        text-align: center;
+      }
+      .hero-eyebrow { justify-content: center; }
+      .hero-orig { text-align: center; }
+      .hero-sub { text-align: center; }
+      .hero-actions { justify-content: center; }
+      .hero-stat {
+        margin: 0 auto;
+        max-width: calc(100% - 2rem);
+      }
+      /* hide figure — video bg is enough on mobile */
+      .hero-figure-layer { display: none; }
+      /* hide clutter decos on mobile */
+      .deco-1, .deco-2, .deco-3, .deco-4, .deco-5 { display: none; }
+      /* stronger dark scrim — video too bright on small screens */
+      .hero-tint {
+        background: rgba(5,5,7,.62);
+        mix-blend-mode: normal;
+      }
+      /* sections */
+      .eyebrow { display: flex; justify-content: center; }
+      .section-title { text-align: center; }
+      .stat-card { justify-content: center; }
+    }
+
+    /* ── SMALL PHONE (≤ 480px) ── */
+    @media (max-width: 480px) {
+      .hero { padding: 5.5rem 0 4rem; }
+      .hero-stat { font-size: .9em; }
+    }
+
     /* respect reduced-motion — kill particles / parallax / heavy loops */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
