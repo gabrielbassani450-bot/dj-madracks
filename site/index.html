@@ -97,9 +97,8 @@
       text-rendering: optimizeLegibility;
     }
     body {
-      /* radial space gradient — NO background-attachment:fixed (kills 120Hz, forces repaint every scroll frame) */
-      background:
-        radial-gradient(ellipse 120% 90% at 50% 0%, #14161D 0%, var(--bg-2) 38%, var(--bg) 100%);
+      /* flat black — matches video background for seamless look */
+      background: #000000;
     }
 
     ::selection { background: var(--accent); color: #04060c; }
@@ -381,8 +380,8 @@
       isolation: isolate;            /* contain internal z-index stack */
       min-height: 100vh;
       min-height: 100svh;
-      display: flex; align-items: center;
-      padding: 8.5rem 0 6rem;
+      display: flex; align-items: flex-end;
+      padding: 8.5rem 0 7rem;
       overflow: hidden;
     }
 
