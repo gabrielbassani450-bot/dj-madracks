@@ -1007,6 +1007,16 @@
       100% { opacity: 0; visibility: hidden; }
     }
 
+    /* =========================================================
+       ENTRANCE ANIMATION GATE — paused until body.ready
+       Prevents hero text from animating behind the intro overlay.
+       body.ready is added by JS after intro completes.
+       ========================================================= */
+    .hl    { animation-play-state: paused; }
+    .h-rise { animation-play-state: paused; }
+    body.ready .hl,
+    body.ready .h-rise { animation-play-state: running; }
+
     /* respect reduced-motion — kill particles / parallax / heavy loops */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
@@ -1324,21 +1334,6 @@
     const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
     const ric      = window.requestIdleCallback || ((fn) => setTimeout(fn, 1));
 
-    /* ─── intro splash ─────────────────────────────────────────── */
-    const introEl = document.getElementById('intro');
-    if (introEl && !reduced) {
-      document.body.style.overflow = 'hidden';
-      setTimeout(() => {
-        introEl.classList.add('intro-out');
-        introEl.addEventListener('animationend', () => {
-          introEl.remove();
-          document.body.style.overflow = '';
-        }, { once: true });
-      }, 2300);
-    } else if (introEl) {
-      introEl.remove(); /* reduced-motion: skip intro */
-    }
-
     /* ─── scroll state — save in event, apply in rAF (no jank) ─── */
     let _scrollY = window.scrollY;
     window.addEventListener('scroll', () => { _scrollY = window.scrollY; }, { passive: true });
@@ -1369,67 +1364,84 @@
     };
 
     /* =========================================================
-       REVEAL ON SCROLL + counters via IntersectionObserver
-       Counters deferred to requestIdleCallback — non-critical
+       onIntroComplete — fires after intro splash removed.
+       Starts: entrance animations, IO reveal, counters, typewriter.
        ========================================================= */
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        el.classList.add('visible');
-        ric(() => {
-          el.querySelectorAll('[data-count]').forEach((c) => {
-            if (!c.dataset.done) { c.dataset.done = '1'; animateCount(c); }
-          });
-        });
-        io.unobserve(el);
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
-    document.querySelectorAll('.reveal, .city').forEach((el) => io.observe(el));
+    const typeEl = document.getElementById('typeLine');
+    const TYPE_TEXT = 'ON AIR — BRASIL';
 
-    /* hero counters fire on load */
-    window.addEventListener('load', () => {
+    function onIntroComplete() {
+      /* release entrance animations (hl + h-rise were paused via CSS) */
+      document.body.classList.add('ready');
+
+      /* reveal on scroll via IntersectionObserver */
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          el.classList.add('visible');
+          ric(() => {
+            el.querySelectorAll('[data-count]').forEach((c) => {
+              if (!c.dataset.done) { c.dataset.done = '1'; animateCount(c); }
+            });
+          });
+          io.unobserve(el);
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+      document.querySelectorAll('.reveal, .city').forEach((el) => io.observe(el));
+
+      /* hero counters */
       document.querySelectorAll('.hero [data-count]').forEach((c) => {
         if (!c.dataset.done) { c.dataset.done = '1'; animateCount(c); }
       });
-    }, { passive: true });
+
+      /* typewriter */
+      if (typeEl) {
+        if (reduced) {
+          typeEl.textContent = TYPE_TEXT;
+        } else {
+          ric(() => {
+            let i = 0;
+            const type = () => {
+              typeEl.textContent = TYPE_TEXT.slice(0, i++);
+              if (i <= TYPE_TEXT.length) setTimeout(type, 55);
+              else {
+                const scheduleGlitch = () => setTimeout(() => {
+                  typeEl.classList.add('glitch');
+                  setTimeout(() => { typeEl.classList.remove('glitch'); scheduleGlitch(); }, 700);
+                }, 7000);
+                scheduleGlitch();
+              }
+            };
+            setTimeout(type, 200);
+          });
+        }
+      }
+    }
+
+    /* ─── intro splash ─────────────────────────────────────────── */
+    const introEl = document.getElementById('intro');
+    if (introEl && !reduced) {
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        introEl.classList.add('intro-out');
+        introEl.addEventListener('animationend', () => {
+          introEl.remove();
+          document.body.style.overflow = '';
+          onIntroComplete();
+        }, { once: true });
+      }, 2300);
+    } else {
+      if (introEl) introEl.remove();
+      onIntroComplete(); /* no intro: start immediately */
+    }
 
     /* =========================================================
        NAVBAR — state managed inside mainLoop (not scroll callback)
-       DOM writes in scroll callbacks cause style recalc jank.
-       _scrollY is read (set by passive listener above), written in rAF.
        ========================================================= */
     const nav = document.getElementById('nav');
     let _navScrolled = _scrollY > 40;
     if (_navScrolled) nav.classList.add('scrolled');
-
-    /* =========================================================
-       HERO TYPEWRITER — deferred via requestIdleCallback
-       ========================================================= */
-    const typeEl = document.getElementById('typeLine');
-    const TYPE_TEXT = 'ON AIR — BRASIL';
-    if (typeEl) {
-      if (reduced) {
-        typeEl.textContent = TYPE_TEXT;
-      } else {
-        ric(() => {
-          let i = 0;
-          const type = () => {
-            typeEl.textContent = TYPE_TEXT.slice(0, i++);
-            if (i <= TYPE_TEXT.length) setTimeout(type, 55);
-            else {
-              /* recursive setTimeout — setInterval for animation is prohibited (cannot be cancelled cleanly) */
-              const scheduleGlitch = () => setTimeout(() => {
-                typeEl.classList.add('glitch');
-                setTimeout(() => { typeEl.classList.remove('glitch'); scheduleGlitch(); }, 700);
-              }, 7000);
-              scheduleGlitch();
-            }
-          };
-          setTimeout(type, 350);
-        });
-      }
-    }
 
     /* =========================================================
        UNIFIED MAIN LOOP — ONE rAF for parallax + cursor glow
