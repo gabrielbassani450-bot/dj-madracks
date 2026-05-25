@@ -603,36 +603,6 @@
       text-transform: uppercase; color: var(--text-2);
     }
 
-    /* animated scroll indicator — pinned to hero base */
-    .hero-scroll {
-      position: absolute; left: 50%; bottom: 1.5rem;
-      z-index: 6;
-      display: flex; flex-direction: column; align-items: center; gap: .6rem;
-      font-family: var(--font-mono);
-      font-size: .56rem; letter-spacing: .3em; text-transform: uppercase;
-      color: var(--text-2);
-      animation: scrollIn 1s var(--ease) 1.5s backwards;
-    }
-    @keyframes scrollIn {
-      from { opacity: 0; transform: translate(-50%, 16px); }
-      to   { opacity: 1; transform: translate(-50%, 0); }
-    }
-    .scroll-track {
-      width: 22px; height: 34px; border-radius: 12px;
-      border: 1.5px solid rgba(255,255,255,.3);
-      display: flex; justify-content: center; padding-top: 6px;
-    }
-    .scroll-dot {
-      width: 3px; height: 7px; border-radius: 2px;
-      background: var(--accent-2);
-      animation: scrollDot 1.8s var(--ease) infinite;
-    }
-    @keyframes scrollDot {
-      0%   { opacity: 0; transform: translateY(-3px); }
-      30%  { opacity: 1; }
-      70%  { opacity: 1; }
-      100% { opacity: 0; transform: translateY(11px); }
-    }
 
     /* staggered entrance — eyebrow / sub / actions / stat */
     .h-rise {
@@ -1198,11 +1168,6 @@
       </div>
     </div>
 
-    <!-- animated scroll indicator -->
-    <a class="hero-scroll" href="#track" aria-label="Rolar para o conteúdo">
-      <span>Scroll</span>
-      <i class="scroll-track" aria-hidden="true"><i class="scroll-dot"></i></i>
-    </a>
   </header>
 
   <!-- STATS -->
