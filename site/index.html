@@ -679,30 +679,7 @@
     .track-cover {
       position: relative;
       aspect-ratio: 1 / 1;
-      display: grid; place-items: center;
-      background:
-        radial-gradient(circle at 32% 28%, rgba(111,168,255,.35), transparent 58%),
-        linear-gradient(150deg, #1A2230 0%, #07080C 100%);
       overflow: hidden;
-    }
-    .track-cover .cover-text {
-      text-align: center; z-index: 2; padding: 1rem;
-      font-family: var(--font-display); font-weight: 700;
-      line-height: .86; letter-spacing: -.02em;
-    }
-    .cover-text .top { display: block; font-size: clamp(2.4rem, 6vw, 4.2rem); color: var(--text); }
-    .cover-text .mid {
-      display: block; margin: .55rem 0;
-      font-family: var(--font-mono); font-weight: 400;
-      font-size: clamp(.6rem, 1.4vw, .82rem);
-      letter-spacing: .36em; color: var(--accent-2);
-    }
-    .cover-text .bot {
-      display: block;
-      font-size: clamp(3.4rem, 9vw, 6.6rem);
-      background: linear-gradient(120deg, var(--accent), var(--accent-2));
-      -webkit-background-clip: text; background-clip: text;
-      -webkit-text-fill-color: transparent; color: transparent;
     }
 
     .track-info {
@@ -1160,11 +1137,7 @@
 
       <article class="track-card glass glass-hover reveal">
         <div class="track-cover">
-          <div class="cover-text">
-            <span class="top">TROPA</span>
-            <span class="mid">— DOS —</span>
-            <span class="bot">244</span>
-          </div>
+          <img src="assets/tropa244.png" alt="Tropa Dos 244 — DJ Madracks Original" style="width:100%;height:100%;object-fit:cover;display:block;" />
         </div>
         <div class="track-info">
           <div>
