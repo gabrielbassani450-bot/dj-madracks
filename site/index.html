@@ -782,60 +782,6 @@
       border-radius: var(--radius);
     }
 
-    /* =========================================================
-       AUDIENCE MAP — cities
-       ========================================================= */
-    .cities { display: flex; flex-direction: column; gap: .9rem; }
-    .city {
-      display: grid;
-      grid-template-columns: 56px 1fr auto;
-      gap: 1.3rem; align-items: center;
-      padding: 1.25rem 1.5rem;
-    }
-    .city .rank {
-      font-family: var(--font-display); font-weight: 700;
-      font-size: 1.9rem; letter-spacing: -.03em;
-      background: linear-gradient(160deg, var(--accent), var(--accent-2));
-      -webkit-background-clip: text; background-clip: text;
-      -webkit-text-fill-color: transparent; color: transparent;
-    }
-    .city .body { display: flex; flex-direction: column; gap: .55rem; }
-    .city .name {
-      font-family: var(--font-display); font-weight: 600;
-      font-size: 1.15rem; letter-spacing: -.02em;
-    }
-    .city .bar {
-      height: 6px; border-radius: 100px;
-      background: rgba(255,255,255,.07);
-      overflow: hidden; position: relative;
-    }
-    .city .bar::before {
-      content: ""; position: absolute; inset: 0;
-      width: 100%;                          /* full width, masked by scaleX */
-      transform: scaleX(0);
-      transform-origin: left center;        /* animate from left */
-      border-radius: 100px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      box-shadow: 0 0 12px rgba(111,168,255,.5);
-      transition: transform 1.4s var(--ease); /* transform = compositor, not width */
-    }
-    .city.visible .bar::before { transform: scaleX(var(--sw, 0)); }
-    .city .count {
-      text-align: right;
-      font-family: var(--font-display); font-weight: 700;
-      font-size: 1.5rem; letter-spacing: -.02em; color: var(--text);
-    }
-    .city .count small {
-      display: block; margin-top: -.1rem;
-      font-family: var(--font-mono); font-weight: 400;
-      font-size: .54rem; letter-spacing: .14em; text-transform: uppercase;
-      color: var(--text-2);
-    }
-    @media (max-width: 560px) {
-      .city { grid-template-columns: 40px 1fr; }
-      .city .count { grid-column: 2; text-align: left; }
-      .city .rank { font-size: 1.4rem; }
-    }
 
     /* =========================================================
        PLAYLIST PICK
@@ -1017,7 +963,7 @@
        Browser renders them only when near viewport.
        contain-intrinsic-size = estimated height to preserve scrollbar accuracy.
        ========================================================= */
-    #track, #cities, #playlist, #booking {
+    #track, #playlist, #booking {
       content-visibility: auto;
       contain-intrinsic-size: 0 700px;
     }
@@ -1093,7 +1039,6 @@
     </a>
     <ul class="nav-links">
       <li><a href="#track">Track</a></li>
-      <li><a href="#cities">Cidades</a></li>
       <li><a href="#playlist">Playlist</a></li>
       <li><a href="#booking">Booking</a></li>
     </ul>
@@ -1268,58 +1213,6 @@
     </div>
   </section>
 
-  <!-- AUDIENCE MAP -->
-  <section class="section" id="cities">
-    <div class="container">
-      <div class="reveal">
-        <span class="eyebrow">02 — Audience Map</span>
-        <h2 class="section-title">Onde <span class="grad">me ouvem</span></h2>
-      </div>
-
-      <div class="cities">
-        <div class="city glass glass-hover reveal" data-delay="1" style="--w: 100%; --sw: 1;">
-          <span class="rank">01</span>
-          <div class="body">
-            <span class="name">São Paulo</span>
-            <div class="bar" aria-hidden="true"></div>
-          </div>
-          <span class="count"><span data-count="1010">0</span><small>ouvintes</small></span>
-        </div>
-        <div class="city glass glass-hover reveal" data-delay="2" style="--w: 40%; --sw: 0.40;">
-          <span class="rank">02</span>
-          <div class="body">
-            <span class="name">Porto Alegre</span>
-            <div class="bar" aria-hidden="true"></div>
-          </div>
-          <span class="count"><span data-count="408">0</span><small>ouvintes</small></span>
-        </div>
-        <div class="city glass glass-hover reveal" data-delay="3" style="--w: 27%; --sw: 0.27;">
-          <span class="rank">03</span>
-          <div class="body">
-            <span class="name">Brasília</span>
-            <div class="bar" aria-hidden="true"></div>
-          </div>
-          <span class="count"><span data-count="270">0</span><small>ouvintes</small></span>
-        </div>
-        <div class="city glass glass-hover reveal" data-delay="4" style="--w: 26.6%; --sw: 0.266;">
-          <span class="rank">04</span>
-          <div class="body">
-            <span class="name">Curitiba</span>
-            <div class="bar" aria-hidden="true"></div>
-          </div>
-          <span class="count"><span data-count="269">0</span><small>ouvintes</small></span>
-        </div>
-        <div class="city glass glass-hover reveal" data-delay="5" style="--w: 26.5%; --sw: 0.265;">
-          <span class="rank">05</span>
-          <div class="body">
-            <span class="name">Belo Horizonte</span>
-            <div class="bar" aria-hidden="true"></div>
-          </div>
-          <span class="count"><span data-count="268">0</span><small>ouvintes</small></span>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- PLAYLIST PICK -->
   <section class="section" id="playlist">
