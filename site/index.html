@@ -1457,9 +1457,9 @@
             if (!t) { cb(); return; }
             t = t.slice(0, -1);
             nameText.textContent = t;
-            setTimeout(step, 48 + Math.random() * 38);
+            setTimeout(step, 28 + Math.random() * 20);
           };
-          setTimeout(step, 60);
+          setTimeout(step, 30);
         };
 
         const nameWrite = (font, cb) => {
@@ -1471,7 +1471,7 @@
             if (t.length === WORD.length) { cb(); return; }
             t += WORD[t.length];
             nameText.textContent = t;
-            setTimeout(step, 42 + Math.random() * 52);
+            setTimeout(step, 28 + Math.random() * 28);
           };
           step();
         };
@@ -1481,7 +1481,7 @@
           cidx = (cidx + 1) % CYCLE_FONTS.length;
           nameErase(() => nameWrite(CYCLE_FONTS[cidx], () => {
             nameCaret.classList.add('blink');
-            setTimeout(cycle, 4000 + Math.random() * 2000);
+            setTimeout(cycle, 2000);
           }));
         };
 
@@ -1490,7 +1490,7 @@
         setTimeout(() => {
           nameText.textContent = WORD;
           nameCaret.classList.add('blink');
-          setTimeout(cycle, 3500);
+          setTimeout(cycle, 1500);
         }, entranceEnd);
       }
     }
