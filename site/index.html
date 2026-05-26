@@ -1079,22 +1079,22 @@
         margin: 0 auto;
         max-width: calc(100% - 2rem);
       }
-      /* video — cover fills hero, positioned top so branding shows up high */
+      /* video — contain: full video visible, no crop */
       .hero-video {
-        object-fit: cover;
-        object-position: center top;
+        object-fit: contain;
+        object-position: center center;
       }
-      /* figure — sits between video (top) and content (bottom) */
+      /* figure — right side, between video and content */
       .hero-figure-layer {
         display: flex;
-        right: auto;
-        left: 50%;
-        transform: translateX(-50%);
+        left: auto;
+        right: 0;
+        transform: none;
         width: auto;
-        justify-content: center;
-        height: 42%;
-        bottom: 20rem;
-        opacity: .85;
+        justify-content: flex-end;
+        height: 46%;
+        bottom: 19rem;
+        opacity: .9;
         z-index: 1;
       }
       /* hide clutter decos */
