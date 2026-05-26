@@ -1089,19 +1089,18 @@
         transform: scale(1.22);
         transform-origin: center top;
       }
-      /* figure — right side, between video and content */
+      /* figure — right side, near video */
       .hero-figure-layer {
         display: flex;
         left: auto;
-        right: 0;
+        right: -2%;
+        bottom: 5rem;
         transform: none;
         width: auto;
         justify-content: flex-end;
-        height: 14%;
-        bottom: 13rem;
-        right: -5%;
-        opacity: .9;
-        z-index: 1;
+        height: 40%;
+        opacity: .92;
+        z-index: 3;
       }
       /* hide clutter decos */
       .deco-1, .deco-2, .deco-3, .deco-4, .deco-5 { display: none; }
@@ -1119,7 +1118,7 @@
     /* ── SMALL PHONE (≤ 480px) ── */
     @media (max-width: 480px) {
       .hero { padding: 4.5rem 0 12rem; }
-      .hero-figure-layer { height: 14%; bottom: 13rem; right: -5%; }
+      .hero-figure-layer { height: 35%; bottom: 4rem; right: -2%; }
       .hero-stat { font-size: .9em; }
     }
 
