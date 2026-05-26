@@ -931,6 +931,18 @@
       color: var(--text-2);
     }
     .footer-copy .dot { color: var(--accent); }
+    .footer-dev {
+      margin-top: .7rem;
+      font-family: var(--font-mono);
+      font-size: .58rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--text-2); opacity: .55;
+      text-align: center;
+    }
+    .footer-dev a {
+      color: var(--accent-2); text-decoration: none;
+      transition: opacity .2s;
+    }
+    .footer-dev a:hover { opacity: .8; }
 
     /* =========================================================
        REVEAL ON SCROLL
@@ -1436,6 +1448,7 @@
       <span class="dot">·</span>
       <span>Underground</span>
     </div>
+    <div class="footer-dev">Desenvolvido por <a href="https://silencode.com.br" target="_blank" rel="noopener">Silencode</a></div>
   </footer>
 
   <script>
