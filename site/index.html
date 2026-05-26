@@ -1067,6 +1067,12 @@
         text-align: center;
         transform: scale(.84);
         transform-origin: center bottom;
+        position: relative;
+        z-index: 10;
+      }
+      .hero-eyebrow, .hero-orig, .hero-sub {
+        color: #ffffff;
+        text-shadow: 0 1px 14px rgba(0,0,0,.9);
       }
       .hero-eyebrow { justify-content: center; }
       .hero-orig { text-align: center; }
@@ -1099,9 +1105,9 @@
       }
       /* hide clutter decos */
       .deco-1, .deco-2, .deco-3, .deco-4, .deco-5 { display: none; }
-      /* dark scrim for readability */
+      /* dark scrim — lighter so text breathes */
       .hero-tint {
-        background: rgba(5,5,7,.52);
+        background: rgba(5,5,7,.35);
         mix-blend-mode: normal;
       }
       /* sections */
