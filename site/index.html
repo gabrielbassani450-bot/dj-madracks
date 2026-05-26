@@ -1081,10 +1081,12 @@
         margin: 0 auto;
         max-width: calc(100% - 2rem);
       }
-      /* video — contain: full video visible, no crop */
+      /* video — contain + scale up slightly */
       .hero-video {
         object-fit: contain;
         object-position: center 28%;
+        transform: scale(1.22);
+        transform-origin: center top;
       }
       /* figure — right side, between video and content */
       .hero-figure-layer {
