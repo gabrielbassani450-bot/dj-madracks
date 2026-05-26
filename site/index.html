@@ -1078,13 +1078,25 @@
         margin: 0 auto;
         max-width: calc(100% - 2rem);
       }
-      /* hide figure — video bg is enough on mobile */
-      .hero-figure-layer { display: none; }
+      /* video — show full, no crop (landscape video + portrait screen) */
+      .hero-video {
+        object-fit: contain;
+        object-position: center center;
+      }
+      /* figure — full width centered, behind content */
+      .hero-figure-layer {
+        display: flex;
+        left: 0; right: 0; width: 100%;
+        justify-content: center;
+        height: 65%;
+        opacity: .65;
+        z-index: 1;
+      }
       /* hide clutter decos on mobile */
       .deco-1, .deco-2, .deco-3, .deco-4, .deco-5 { display: none; }
       /* stronger dark scrim — video too bright on small screens */
       .hero-tint {
-        background: rgba(5,5,7,.62);
+        background: rgba(5,5,7,.55);
         mix-blend-mode: normal;
       }
       /* sections */
@@ -1617,6 +1629,8 @@
         cx += (mx - cx) * 0.07;
         cy += (my - cy) * 0.07;
         for (const l of pLayers) {
+          /* on mobile: skip figure-layer (has data-tilt) — CSS controls centering */
+          if (isMobile && l.dataset.tilt) continue;
           const depth = parseFloat(l.dataset.depth)  || 0;
           const scl   = parseFloat(l.dataset.scroll) || 0;
           const tx = -cx * depth;
