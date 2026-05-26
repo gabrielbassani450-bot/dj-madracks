@@ -1050,6 +1050,10 @@
     /* prevent horizontal overflow on all screens */
     html, body { overflow-x: hidden; }
 
+    /* hide scrollbar all browsers */
+    * { scrollbar-width: none; -ms-overflow-style: none; }
+    *::-webkit-scrollbar { display: none; }
+
     /* ── TABLET (≤ 900px) ── */
     @media (max-width: 900px) {
       .hero-inner { align-items: center; text-align: center; }
