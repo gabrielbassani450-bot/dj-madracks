@@ -325,20 +325,19 @@
       display: flex; align-items: center; justify-content: space-between;
       gap: 1rem;
       padding: 1.15rem var(--gutter);
-      /* no padding/backdrop-filter transition — both cause layout/GPU recomposite on scroll */
-      transition: background .4s var(--ease), border-color .4s var(--ease), box-shadow .4s var(--ease);
+      transition: background .5s var(--ease), border-color .5s var(--ease),
+                  box-shadow .5s var(--ease), padding .5s var(--ease);
       border-bottom: 1px solid transparent;
     }
     .nav.scrolled {
       padding: .6rem var(--gutter);
-      background: linear-gradient(180deg, rgba(10,11,15,.78), rgba(10,11,15,.55));
+      background: linear-gradient(180deg, rgba(10,11,15,.82), rgba(10,11,15,.60));
       backdrop-filter: blur(var(--blur)) saturate(180%);
       -webkit-backdrop-filter: blur(var(--blur)) saturate(180%);
       border-bottom: 1px solid var(--glass-border);
-      box-shadow: 0 8px 30px rgba(0,0,0,.4);
+      box-shadow: 0 8px 32px rgba(0,0,0,.45), 0 1px 0 rgba(111,168,255,.14);
     }
-    /* removed height transition — height causes layout reflow; use opacity/filter (compositor only) */
-    .nav-logo { height: 34px; opacity: .95; transition: opacity .3s var(--ease), filter .3s var(--ease); }
+    .nav-logo { height: 34px; opacity: .95; transition: opacity .3s var(--ease), filter .3s var(--ease), height .5s var(--ease); }
     .nav.scrolled .nav-logo { height: 26px; }
     .nav-logo-link:hover .nav-logo { opacity: 1; filter: drop-shadow(0 0 12px rgba(111,168,255,.6)); }
 
