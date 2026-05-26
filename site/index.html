@@ -824,9 +824,10 @@
     }
     .playlist-body p strong { color: var(--accent-2); font-weight: 600; }
     @media (max-width: 720px) {
-      .playlist-card { grid-template-columns: 1fr; text-align: center; }
-      .playlist-art { margin: 0 auto; }
-      .playlist-body p { margin-left: auto; margin-right: auto; }
+      .playlist-card { grid-template-columns: 1fr; text-align: center; padding: 1.2rem 1.1rem; gap: 1rem; }
+      .playlist-art { margin: 0 auto; width: clamp(110px, 55vw, 170px); }
+      .playlist-body h3 { font-size: 1.5rem; margin-bottom: .6rem; }
+      .playlist-body p { margin-left: auto; margin-right: auto; font-size: .88rem; margin-bottom: 1rem; }
     }
 
 
