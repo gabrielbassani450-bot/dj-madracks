@@ -1062,9 +1062,10 @@
 
     /* ── MOBILE (≤ 768px) ── */
     @media (max-width: 768px) {
+      /* content anchored to bottom */
       .hero {
-        align-items: center;
-        padding: 6.5rem 0 5rem;
+        align-items: flex-end;
+        padding: 5rem 0 3.5rem;
       }
       .hero-inner {
         align-items: center;
@@ -1078,25 +1079,29 @@
         margin: 0 auto;
         max-width: calc(100% - 2rem);
       }
-      /* video — show full, no crop (landscape video + portrait screen) */
+      /* video — cover fills hero, positioned top so branding shows up high */
       .hero-video {
-        object-fit: contain;
-        object-position: center center;
+        object-fit: cover;
+        object-position: center top;
       }
-      /* figure — full width centered, behind content */
+      /* figure — sits between video (top) and content (bottom) */
       .hero-figure-layer {
         display: flex;
-        left: 0; right: 0; width: 100%;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
         justify-content: center;
-        height: 65%;
-        opacity: .65;
+        height: 42%;
+        bottom: 20rem;
+        opacity: .85;
         z-index: 1;
       }
-      /* hide clutter decos on mobile */
+      /* hide clutter decos */
       .deco-1, .deco-2, .deco-3, .deco-4, .deco-5 { display: none; }
-      /* stronger dark scrim — video too bright on small screens */
+      /* dark scrim for readability */
       .hero-tint {
-        background: rgba(5,5,7,.55);
+        background: rgba(5,5,7,.52);
         mix-blend-mode: normal;
       }
       /* sections */
@@ -1107,7 +1112,8 @@
 
     /* ── SMALL PHONE (≤ 480px) ── */
     @media (max-width: 480px) {
-      .hero { padding: 5.5rem 0 4rem; }
+      .hero { padding: 4.5rem 0 3rem; }
+      .hero-figure-layer { height: 40%; bottom: 17rem; }
       .hero-stat { font-size: .9em; }
     }
 
