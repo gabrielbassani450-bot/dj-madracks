@@ -1201,7 +1201,7 @@
   <!-- HERO -->
   <header class="hero" id="hero">
 
-    <video class="hero-video" autoplay muted loop playsinline aria-hidden="true" poster="assets/hero-poster.jpg">
+    <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true" poster="assets/hero-poster.jpg">
       <source src="assets/hero-panel.mp4" type="video/mp4" />
     </video>
 
@@ -1603,6 +1603,17 @@
     }
 
     /* ─── intro splash ─────────────────────────────────────────── */
+    /* ── hero video autoplay fix — iOS / in-app browsers ── */
+    const heroVid = document.querySelector('.hero-video');
+    if (heroVid) {
+      const tryPlay = () => heroVid.play().catch(() => {});
+      tryPlay();
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
+      document.addEventListener('touchstart', tryPlay, { once: true });
+      window.addEventListener('focus', tryPlay);
+      heroVid.addEventListener('pause', () => { if (!document.hidden) tryPlay(); });
+    }
+
     const introEl = document.getElementById('intro');
     if (introEl && !reduced) {
       document.body.style.overflow = 'hidden';
