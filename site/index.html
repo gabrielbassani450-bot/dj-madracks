@@ -12,8 +12,11 @@
   <meta property="og:type" content="music.musician" />
   <meta property="og:title" content="DJ MADRACKS ORIGINAL — DJ & Music Producer" />
   <meta property="og:description" content="🎧 DJ & Music Producer · Underground · Trap · Hip-Hop. Ouça no Spotify." />
-  <meta property="og:image" content="assets/logo-round.png" />
-  <meta property="og:url" content="https://open.spotify.com/artist/24geOPfWtbI9dqjUJf7q7n" />
+  <meta property="og:image" content="https://djmadracks.com.br/assets/logo-round.png" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
+  <meta property="og:url" content="https://djmadracks.com.br" />
+  <meta name="twitter:image" content="https://djmadracks.com.br/assets/logo-round.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -1201,7 +1204,7 @@
   <!-- HERO -->
   <header class="hero" id="hero">
 
-    <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true" poster="assets/hero-poster.jpg">
+    <video class="hero-video" autoplay muted loop playsinline webkit-playsinline preload="auto" aria-hidden="true" poster="assets/hero-poster.jpg">
       <source src="assets/hero-panel.mp4" type="video/mp4" />
     </video>
 
@@ -1603,15 +1606,32 @@
     }
 
     /* ─── intro splash ─────────────────────────────────────────── */
-    /* ── hero video autoplay fix — iOS / in-app browsers ── */
+    /* ── hero video autoplay fix — iOS / Instagram WKWebView ── */
     const heroVid = document.querySelector('.hero-video');
     if (heroVid) {
-      const tryPlay = () => heroVid.play().catch(() => {});
-      tryPlay();
-      document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
+      const tryPlay = () => { if (heroVid.paused) heroVid.play().catch(() => {}); };
+      /* fire when video is actually ready */
+      heroVid.addEventListener('canplay',        tryPlay);
+      heroVid.addEventListener('canplaythrough', tryPlay);
+      heroVid.addEventListener('loadeddata',     tryPlay);
+      heroVid.addEventListener('loadedmetadata', tryPlay);
+      /* fire on user gestures — unlocks autoplay on locked browsers */
       document.addEventListener('touchstart', tryPlay, { once: true });
+      document.addEventListener('touchend',   tryPlay, { once: true });
+      document.addEventListener('click',      tryPlay, { once: true });
+      /* fire when page becomes visible / focused */
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
       window.addEventListener('focus', tryPlay);
+      /* if video pauses itself, restart */
       heroVid.addEventListener('pause', () => { if (!document.hidden) tryPlay(); });
+      /* periodic retry for stubborn in-app browsers (10× / 600ms) */
+      let _r = 0;
+      const _iv = setInterval(() => {
+        tryPlay();
+        if (++_r >= 10) clearInterval(_iv);
+      }, 600);
+      /* initial attempt */
+      tryPlay();
     }
 
     const introEl = document.getElementById('intro');
